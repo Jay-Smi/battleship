@@ -1,0 +1,28 @@
+.map {
+    width: 100vw;
+    height: 100vh;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-image: url("../assets/images/map.jpg");
+    background-size: cover;
+    background-position: center;
+    animation: unblur 1.5s linear;
+    filter: blur(10px);
+    animation-fill-mode: forwards;
+}
+video {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+@keyframes unblur {
+    0% {
+    }
+    100% {
+        filter: blur(0);
+    }
+}

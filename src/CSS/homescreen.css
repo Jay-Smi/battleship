@@ -1,0 +1,163 @@
+@font-face {
+    font-family: BlackOps1;
+    src: url("../assets/fonts/BlackOpsOne.ttf");
+}
+@font-face {
+    font-family: PressStart;
+    src: url("../assets/fonts/PressStart.ttf");
+}
+
+* {
+    /* border: 1px solid red; */
+    padding: 0;
+    margin: 0;
+}
+
+body {
+    font-size: 16px;
+}
+
+#container {
+    height: 100vh;
+    width: 100vw;
+    background-image: url("../assets/images/homescreen.jpg");
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: grey;
+}
+
+.homeHeader {
+    margin: 4rem 0;
+    font-family: BlackOps1;
+    font-size: 7rem;
+    text-align: center;
+    text-shadow: 1px 1px 1px #a8a8a8, 1px 2px 1px #a8a8a8, 1px 3px 1px #a8a8a8,
+        1px 4px 1px #a8a8a8, 1px 5px 1px #a8a8a8, 1px 6px 1px #a8a8a8,
+        1px 7px 1px #a8a8a8, 1px 8px 1px #a8a8a8;
+}
+
+.newGameContainer {
+    margin-bottom: auto;
+}
+
+.newGame {
+    font-family: PressStart;
+    font-size: 2rem;
+    overflow: hidden;
+    text-align: center;
+    border-right: 1rem solid grey;
+    white-space: nowrap;
+    margin: 0 auto auto auto;
+    letter-spacing: 0.4rem;
+    animation: typing 2s steps(40, end), blink-caret 0.75s step-end infinite;
+    cursor: pointer;
+    text-shadow: 0 0 10px rgba(0, 0, 0, 0.185);
+}
+
+.newGame:hover {
+    color: darkgray;
+}
+
+@keyframes typing {
+    from {
+        width: 0;
+    }
+    to {
+        width: 100%;
+    }
+}
+
+@keyframes blink-caret {
+    from,
+    to {
+        border-color: transparent;
+    }
+    50% {
+        border-color: grey;
+    }
+}
+
+ul {
+    position: fixed;
+    bottom: 40%;
+    left: 65%;
+    transform: translateX(-50%);
+    margin: 0;
+    padding: 0;
+}
+
+li {
+    position: absolute;
+    list-style: none;
+    width: 80px;
+    height: 80px;
+    background: #262626;
+    border-radius: 50%;
+    filter: blur(15px);
+}
+
+li:nth-child(even) {
+    animation: animateEven 3.5s linear infinite;
+}
+li:nth-child(odd) {
+    animation: animateOdd 3.5s linear infinite;
+}
+
+li:nth-child(9) {
+    animation: none;
+    filter: blur(15px);
+}
+
+@keyframes animateEven {
+    0% {
+        transform: translate(0, 0) scale(1);
+        opacity: 1;
+        filter: blur(10px);
+    }
+    100% {
+        transform: translate(100px, -500px) scale(3);
+        opacity: 0;
+        filter: blur(15px);
+    }
+}
+
+@keyframes animateOdd {
+    0% {
+        transform: translate(0, 0) scale(1);
+        opacity: 1;
+        filter: blur(10px);
+    }
+    100% {
+        transform: translate(-100px, -500px) scale(3);
+        opacity: 0;
+        filter: blur(15px);
+    }
+}
+
+li:nth-child(1) {
+    animation-delay: 0s;
+}
+li:nth-child(2) {
+    animation-delay: 0.4s;
+}
+li:nth-child(3) {
+    animation-delay: 0.8s;
+}
+li:nth-child(4) {
+    animation-delay: 1.2s;
+}
+li:nth-child(5) {
+    animation-delay: 1.6s;
+}
+li:nth-child(6) {
+    animation-delay: 2s;
+}
+li:nth-child(7) {
+    animation-delay: 2.4s;
+}
+li:nth-child(8) {
+    animation-delay: 2.8s;
+}

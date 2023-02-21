@@ -1,0 +1,42 @@
+{
+    "name": "battleship",
+    "version": "1.0.0",
+    "description": "",
+    "private": true,
+    "scripts": {
+        "test": "jest",
+        "build": "webpack",
+        "start": "webpack server --open",
+        "watch": "jest --watch"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/gluttz/battleship.git"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/gluttz/battleship/issues"
+    },
+    "homepage": "https://github.com/gluttz/battleship#readme",
+    "devDependencies": {
+        "@babel/core": "^7.20.12",
+        "@babel/preset-env": "^7.20.2",
+        "babel-jest": "^29.4.3",
+        "babel-loader": "^9.1.2",
+        "css-loader": "^6.7.3",
+        "file-loader": "^6.2.0",
+        "html-loader": "^4.2.0",
+        "html-webpack-plugin": "^5.5.0",
+        "jest": "^29.4.3",
+        "style-loader": "^3.3.1",
+        "url-loader": "^4.1.1",
+        "webpack": "^5.75.0",
+        "webpack-cli": "^5.0.1",
+        "webpack-dev-server": "^4.11.1"
+    },
+    "dependencies": {
+        "kampos": "^0.7.1"
+    }
+}

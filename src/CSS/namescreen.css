@@ -1,0 +1,74 @@
+.newGameContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2rem;
+}
+
+.newGameContainer p {
+    font-family: PressStart;
+    overflow: hidden;
+    font-size: 1.2rem;
+    font-weight: 700;
+    text-align: center;
+    border-right: 1rem solid grey;
+    white-space: nowrap;
+    margin: 0 auto auto auto;
+    letter-spacing: 0.2rem;
+    animation: typing 2s steps(40, end), blink-caret 0.75s step-end infinite;
+}
+
+.nameForm {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.nameForm input {
+    background-color: grey;
+    font-family: PressStart;
+    font-size: 1rem;
+    padding: 1rem 1rem;
+    border: none;
+    outline: none;
+    color: white;
+    caret-color: black;
+    box-shadow: 3px 3px 5px #a8a8a8;
+    letter-spacing: 3px;
+    opacity: 0.8;
+}
+
+.nameForm input:focus {
+    opacity: 1;
+}
+
+.nameForm input::placeholder {
+    color: white;
+}
+
+.nameForm button {
+    font-family: BlackOps1;
+    font-size: 2rem;
+    cursor: pointer;
+    border: none;
+    background-color: transparent;
+    color: rgb(71, 71, 71);
+    opacity: 0.8;
+}
+
+.nameForm button:hover {
+    opacity: 1;
+}
+
+#container.hide {
+    animation: burn 1.5s linear;
+    animation-fill-mode: forwards;
+}
+
+@keyframes burn {
+    0% {
+    }
+    100% {
+        transform: translateX(100%);
+    }
+}
