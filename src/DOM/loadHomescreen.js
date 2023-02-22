@@ -1,11 +1,13 @@
 import renderContainer from "./renderContainer.js";
 import elem from "./elem.js";
 import loadNameScreen from "./loadNameScreen.js";
+import background from "../assets/images/homescreen.jpg";
 import "../CSS/homescreen.css";
 
 function loadHomescreen() {
     renderContainer();
     const container = document.querySelector("#container");
+    container.style.backgroundImage = background;
     container.appendChild(
         elem({
             prop: "header",

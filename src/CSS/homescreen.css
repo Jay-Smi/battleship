@@ -89,6 +89,43 @@ ul {
     padding: 0;
 }
 
+@media (max-width: 1200px) {
+    ul {
+        left: 75%;
+    }
+}
+
+@media (max-width: 900px) {
+    ul {
+        left: 80%;
+    }
+
+    .homeHeader {
+        font-size: 5rem;
+        margin-bottom: 5rem;
+    }
+}
+
+@media (max-width: 600px) {
+    .homeHeader {
+        font-size: 4rem;
+        margin-bottom: 5rem;
+    }
+    .newGame {
+        font-size: 1.5rem;
+    }
+}
+
+@media (max-width: 500px) {
+    .homeHeader {
+        font-size: 3rem;
+        margin-bottom: 5rem;
+    }
+    .newGame {
+        font-size: 1.2rem;
+    }
+}
+
 li {
     position: absolute;
     list-style: none;

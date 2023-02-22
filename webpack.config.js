@@ -17,24 +17,27 @@ module.exports = {
         path: path.resolve(__dirname, "dist"),
         clean: true,
     },
+    resolve: {
+        extensions: [".js"],
+    },
     module: {
         rules: [
             {
                 test: /\.css$/i,
                 use: ["style-loader", "css-loader"],
             },
-            {
-                test: /\.m?js$/,
-                exclude: /node_modules/,
-                use: {
-                    loader: "babel-loader",
-                    options: {
-                        presets: [
-                            ["@babel/preset-env", { targets: "defaults" }],
-                        ],
-                    },
-                },
-            },
+            // {
+            //     test: /\.m?js$/,
+            //     exclude: /node_modules/,
+            //     use: {
+            //         loader: "babel-loader",
+            //         options: {
+            //             presets: [
+            //                 ["@babel/preset-env", { targets: "defaults" }],
+            //             ],
+            //         },
+            //     },
+            // },
             {
                 test: /\.html$/,
                 exclude: /node_modules/,
@@ -55,15 +58,9 @@ module.exports = {
                     },
                 ],
             },
-
             {
-                test: /\.(mov|mp4)$/,
-                loader: "file-loader",
-                options: {
-                    name: "[name].[ext]",
-                    publicPath: "./src/assets/images",
-                    outputPath: "./src/assets/videos",
-                },
+                test: /\.(png|svg|jpg|jpeg|gif)$/i,
+                type: "asset/resource",
             },
         ],
     },

@@ -26,3 +26,39 @@ video {
         filter: blur(0);
     }
 }
+.redPin1 {
+    position: fixed;
+    top: 40%;
+    left: 63%;
+    cursor: pointer;
+    opacity: 0.9;
+}
+.redPin2 {
+    position: fixed;
+    top: 24%;
+    left: 56%;
+    cursor: pointer;
+    opacity: 0.9;
+}
+.redPin3 {
+    position: fixed;
+    top: 40%;
+    left: 80%;
+    cursor: pointer;
+    opacity: 0.9;
+}
+.greenPin {
+    position: fixed;
+    top: 30%;
+    left: 20%;
+    cursor: pointer;
+}
+.redPin1:hover {
+    opacity: 1;
+}
+.redPin2:hover {
+    opacity: 1;
+}
+.redPin3:hover {
+    opacity: 1;
+}
