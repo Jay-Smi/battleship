@@ -16,7 +16,6 @@
     background-position: center;
     animation: unblur 1.5s linear;
     animation-fill-mode: forwards;
-    z-index: -1;
 }
 
 @keyframes unblur {

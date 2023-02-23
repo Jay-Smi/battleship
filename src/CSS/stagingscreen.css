@@ -1,0 +1,534 @@
+.gameContainer {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    width: 100vw;
+    z-index: -3;
+}
+
+.p1OptionsContainer {
+    flex: 1.3;
+    display: flex;
+    background: rgb(144, 144, 144);
+    background: radial-gradient(
+        circle,
+        rgba(144, 144, 144, 1) 0%,
+        rgba(140, 140, 140, 1) 11%,
+        rgba(136, 136, 136, 1) 21%,
+        rgba(144, 144, 144, 1) 69%,
+        rgba(138, 138, 138, 1) 87%,
+        rgba(168, 168, 168, 1) 100%
+    );
+}
+
+.radarContainer {
+    flex: 2;
+    border-bottom: 5px solid lightgrey;
+    border-right: 5px solid lightgrey;
+    border-top: 5px solid rgb(109, 109, 109);
+    border-left: 5px solid rgb(107, 107, 107);
+}
+
+.radar {
+    position: relative;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    margin: 0;
+    padding: 0;
+    width: 263px;
+    height: 100%;
+    border-radius: 50%;
+    border: 10px solid #6d6d6d;
+    background-color: black;
+    box-shadow: 3px 10px 0 #c5c5c5, inset 0 0 50px rgba(0, 255, 0, 0.5),
+        -5px -5px 20px black;
+    overflow: hidden;
+}
+
+.radar li:nth-child(1),
+.radar li:nth-child(2),
+.radar li:nth-child(3),
+.radar li:nth-child(4) {
+    list-style: none;
+    position: absolute;
+    top: 50%;
+    height: 1px;
+    width: 100%;
+    background: rgb(49, 158, 49);
+    border-radius: 50%;
+}
+.radar li:nth-child(2) {
+    transform: rotate(90deg);
+}
+.radar li:nth-child(3) {
+    transform: rotate(45deg);
+}
+.radar li:nth-child(4) {
+    transform: rotate(-45deg);
+}
+
+.radar li:nth-child(5),
+.radar li:nth-child(6) {
+    list-style: none;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border: 1px solid rgba(0, 255, 0, 1);
+    background: transparent;
+    border-radius: 50%;
+}
+
+.radar li:nth-child(5) {
+    width: 75px;
+    height: 75px;
+}
+
+.radar li:nth-child(6) {
+    width: 175px;
+    height: 175px;
+}
+
+.radar li:nth-child(7) {
+    list-style: none;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(45deg, #00ff00 0%, transparent 50%);
+    animation: radar 2s linear infinite;
+    transform-origin: top left;
+}
+
+.radar li:nth-child(8) {
+    list-style: none;
+    position: absolute;
+    top: 40%;
+    left: 75%;
+    width: 8px;
+    height: 8px;
+    background: #00ff00;
+    border-radius: 50%;
+    filter: blur(2px);
+    animation: glow 2s linear infinite;
+}
+.radar li:nth-child(9) {
+    list-style: none;
+    position: absolute;
+    top: 45%;
+    left: 75%;
+    width: 8px;
+    height: 8px;
+    background: #00ff00;
+    border-radius: 50%;
+    filter: blur(2px);
+    animation: glow 2s linear infinite;
+}
+.radar li:nth-child(10) {
+    list-style: none;
+    position: absolute;
+    top: 45%;
+    left: 85%;
+    width: 8px;
+    height: 8px;
+    background: #00ff00;
+    border-radius: 50%;
+    filter: blur(2px);
+    animation: glow 2s linear infinite;
+}
+.radar li:nth-child(11) {
+    list-style: none;
+    position: absolute;
+    top: 50%;
+    left: 80%;
+    width: 8px;
+    height: 8px;
+    background: #00ff00;
+    border-radius: 50%;
+    filter: blur(2px);
+    animation: glow 2s linear infinite;
+}
+.radar li:nth-child(12) {
+    list-style: none;
+    position: absolute;
+    top: 40%;
+    left: 80%;
+    width: 8px;
+    height: 8px;
+    background: #00ff00;
+    border-radius: 50%;
+    filter: blur(2px);
+    animation: glow 2s linear infinite;
+}
+
+@keyframes radar {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes glow {
+    0% {
+        opacity: 0;
+    }
+    50% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+    }
+}
+
+.buttonContainer {
+    display: flex;
+    border-bottom: 5px solid lightgrey;
+    border-right: 5px solid lightgrey;
+    border-top: 5px solid rgb(109, 109, 109);
+    border-left: 5px solid rgb(107, 107, 107);
+}
+
+.base {
+    background: #cacaca;
+    width: 100%;
+    border-radius: 27vmin;
+    box-shadow: 0 6vmin 0.15vmin 0vmin #777, 0 4vmin 0.15vmin 0vmin #777,
+        0 2vmin 0.15vmin 0vmin #777, -20px 20px 50px black;
+    padding: 0vmin 2vmin 2vmin 2vmin;
+    z-index: 1;
+    transform: rotateX(0deg) rotateZ(0deg);
+    margin-top: -4.5vmin;
+    height: 90%;
+}
+
+button#activate {
+    background: #d60505;
+    border: 0;
+    width: 20vmin;
+    height: 19vmin;
+    border-radius: 100%;
+    position: relative;
+    cursor: pointer;
+    outline: none;
+    z-index: 2;
+    box-shadow: 0 4vmin 0.15vmin 0vmin #af0000, 0 2vmin 0.15vmin 0vmin #af0000;
+    top: -2.5vmin;
+    border: 0.5vmin solid #af0000a1;
+    transition: all 0.25s ease 0s;
+}
+
+button#activate:hover {
+    box-shadow: 0 3vmin 0.15vmin 0vmin #af0000, 0 1vmin 0.15vmin 0vmin #af0000;
+    top: -1.5vmin;
+    transition: all 0.5s ease 0s;
+}
+button#activate:active,
+button#activate.pushed {
+    box-shadow: 0 1vmin 0.15vmin 0vmin #af0000, 0 1vmin 0.15vmin 0vmin #af0000;
+    top: 0.5vmin;
+    transition: all 0.25s ease 0s;
+}
+button#activate.pushed {
+    box-shadow: 0 0 20px 10px #ff3c3c, 0 0 100px 50px #ff2828;
+    background: #ff0000;
+    border-bottom: 3px solid #00000020;
+}
+
+.base {
+    scale: 0.4;
+}
+.rightButton {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border-bottom: 5px solid lightgrey;
+    border-right: 5px solid lightgrey;
+    border-top: 5px solid rgb(109, 109, 109);
+    border-left: 5px solid rgb(107, 107, 107);
+}
+.middleButton {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border-bottom: 5px solid lightgrey;
+    border-right: 5px solid lightgrey;
+    border-top: 5px solid rgb(109, 109, 109);
+    border-left: 5px solid rgb(107, 107, 107);
+}
+.leftButton {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border-bottom: 5px solid lightgrey;
+    border-right: 5px solid lightgrey;
+    border-top: 5px solid rgb(109, 109, 109);
+    border-left: 5px solid rgb(107, 107, 107);
+}
+
+.buttonText {
+    background-color: #6d6d6d;
+    padding: 1rem 2rem;
+    font-family: BlackOps1;
+    font-size: 1.3rem;
+    border-radius: 15%;
+    box-shadow: 0 0 10px black;
+    position: relative;
+    color: white;
+    letter-spacing: 0.1rem;
+    text-shadow: -1px -1px 1px black;
+}
+.buttonText::before {
+    content: "";
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: #2b2b2b;
+    position: absolute;
+    top: 25px;
+    left: 5px;
+    box-shadow: 0 0 3px black;
+}
+.buttonText::after {
+    content: "";
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: #2b2b2b;
+    position: absolute;
+    top: 25px;
+    right: 5px;
+    box-shadow: 0 0 3px black;
+}
+
+.p1ShipStage {
+    flex: 5;
+    border-bottom: 5px solid lightgrey;
+    border-right: 5px solid lightgrey;
+    border-top: 5px solid rgb(109, 109, 109);
+    border-left: 5px solid rgb(107, 107, 107);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.shipContainer {
+    flex: 1;
+    display: flex;
+    border-bottom: 5px solid lightgrey;
+    border-right: 5px solid lightgrey;
+    border-top: 5px solid rgb(109, 109, 109);
+    border-left: 5px solid rgb(107, 107, 107);
+    background-color: black;
+    box-shadow: inset 0 0 50px rgba(0, 255, 0, 0.5);
+}
+
+.shipFooter {
+    border-bottom: 5px solid lightgrey;
+    border-right: 5px solid lightgrey;
+    border-top: 5px solid rgb(109, 109, 109);
+    border-left: 5px solid rgb(107, 107, 107);
+    background-color: black;
+    box-shadow: inset 0 0 20px rgba(0, 255, 0, 0.5);
+}
+
+.stagePara {
+    font-family: PressStart;
+    margin: 1rem;
+    font-size: 1rem;
+    color: #00ff00;
+    font-weight: 100;
+    white-space: nowrap;
+    border-right: 1rem solid transparent;
+    overflow: hidden;
+    animation: typing 2.5s steps(40, end), blink-caret2 1s step-end infinite;
+}
+
+.p1GridContainer {
+    flex: 3;
+    background-color: transparent;
+    display: flex;
+    justify-content: center;
+    overflow: hidden;
+    position: relative;
+}
+
+.p1GameboardContainer {
+    width: 50%;
+    height: 100%;
+    border-bottom: 10px solid rgb(155, 155, 155);
+    border-right: 30px solid rgb(182, 182, 182);
+    border-top: 30px solid rgb(71, 71, 71);
+    border-left: 30px solid rgb(94, 94, 94);
+    background-color: rgba(0, 0, 0, 0.9);
+    box-shadow: inset 0 0 140px rgba(0, 255, 0, 0.5);
+    border-top-left-radius: 5%;
+    border-top-right-radius: 5%;
+}
+
+@keyframes blink-caret2 {
+    from,
+    to {
+        border-color: transparent;
+    }
+    50% {
+        border-color: #00ff00;
+    }
+}
+.waves {
+    position: absolute;
+    width: 100vw;
+    z-index: -2;
+    top: -50px;
+    animation: wave 10s linear infinite;
+}
+.shipBow {
+    position: absolute;
+    width: 70%;
+    height: 3000px;
+    background: rgb(78, 78, 78);
+    background: linear-gradient(
+        90deg,
+        rgba(78, 78, 78, 1) 0%,
+        rgba(194, 194, 194, 1) 50%,
+        rgba(84, 84, 84, 1) 100%
+    );
+    top: -400px;
+    z-index: -1;
+    border-top-left-radius: 70% 100%;
+    border-top-right-radius: 70% 100%;
+    border-bottom-left-radius: 10% 30%;
+    border-bottom-right-radius: 10% 30%;
+    transform: rotateX(60deg);
+}
+.shipBowWood {
+    position: absolute;
+    width: 70%;
+    height: 3000px;
+    background: rgb(119, 57, 0);
+    background: radial-gradient(
+        circle,
+        rgba(119, 57, 0, 1) 0%,
+        rgba(164, 79, 0, 1) 46%,
+        rgba(119, 57, 0, 1) 100%
+    );
+
+    top: -640px;
+    left: 160px;
+    z-index: -1;
+    border-top-left-radius: 70% 100%;
+    border-top-right-radius: 70% 100%;
+    border-bottom-left-radius: 10% 30%;
+    border-bottom-right-radius: 10% 30%;
+    transform: rotateX(60deg);
+}
+.shipBowHole {
+    position: absolute;
+    width: 30px;
+    height: 15px;
+    top: 180px;
+    left: 350px;
+    border-radius: 50%;
+    background-color: rgb(43, 43, 43);
+    transform: rotate(-50deg);
+}
+.shipBowHole1 {
+    position: absolute;
+    width: 30px;
+    height: 15px;
+    top: 190px;
+    left: 730px;
+    border-radius: 50%;
+    background-color: rgb(43, 43, 43);
+    transform: rotate(55deg);
+}
+.flakBarrel1,
+.flakBarrel2,
+.flakBarrel3,
+.flakBarrel4,
+.flakBarrel5,
+.flakBarrel6 {
+    position: absolute;
+    width: 20px;
+    height: 300px;
+    border-top-left-radius: 30% 100%;
+    border-top-right-radius: 30% 100%;
+    background: rgb(78, 78, 78);
+    background: linear-gradient(
+        90deg,
+        rgba(78, 78, 78, 1) 0%,
+        rgba(166, 166, 166, 1) 50%,
+        rgba(84, 84, 84, 1) 100%
+    );
+    transform: rotate(20deg);
+}
+
+.flakBarrel1 {
+    top: -150px;
+    left: 555px;
+}
+.flakBarrel2 {
+    top: -150px;
+    left: 605px;
+}
+.flakBarrel3 {
+    top: -150px;
+    left: 655px;
+}
+.flakBarrel4 {
+    top: -95px;
+    left: 555px;
+}
+.flakBarrel5 {
+    top: -95px;
+    left: 605px;
+}
+.flakBarrel6 {
+    top: -95px;
+    left: 655px;
+}
+
+.flakCover {
+    background: rgb(78, 78, 78);
+    background: linear-gradient(
+        90deg,
+        rgba(78, 78, 78, 1) 0%,
+        rgba(166, 166, 166, 1) 50%,
+        rgba(84, 84, 84, 1) 100%
+    );
+    top: 150px;
+    left: 450px;
+    position: absolute;
+    width: 200px;
+    height: 200px;
+}
+.flakCoverTop {
+    background: rgb(78, 78, 78);
+    background: rgb(158, 158, 158);
+    background: radial-gradient(
+        circle,
+        rgba(158, 158, 158, 1) 1%,
+        rgba(113, 113, 113, 1) 47%,
+        rgba(112, 112, 112, 1) 99%
+    );
+
+    top: 100px;
+    left: 450px;
+    position: absolute;
+    width: 200px;
+    height: 100px;
+    border-radius: 50%;
+}
+
+@keyframes wave {
+    0% {
+    }
+    50% {
+        transform: translateY(-15%);
+    }
+    100% {
+    }
+}

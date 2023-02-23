@@ -5,4 +5,12 @@ https://www.freepik.com/free-vector/sunken-cruise-ship-sea-harbor-morning_215849
 
 Map Image Credit: <a href="https://www.freepik.com/free-vector/vintage-world-map-cartography-concept_5671433.htm#query=world%20map&position=14&from_view=search&track=ais">Image by pikisuperstar</a> on Freepik
 
-Piece of paper image credit: <a href="https://www.freepik.com/free-photo/vintage-grunge-paper-background_5405364.htm#query=old%20paper&position=2&from_view=search&track=ais">Image by kjpargeter</a> on Freepik
+Push Pin Image Credit: <a href="https://www.freeiconspng.com/img/27716">Ahkâm on freeiconspng.com</a>
+
+Sticky Note Image Credit: Public Domain https://freesvg.org/sticky-note-1573832186
+
+Big Red button Credit: Maka Lee Ulloa https://codepen.io/MakaUlloa/pen/eYRqrRB
+
+Game world map background credit: <a href="https://www.freepik.com/free-vector/vector-abstract-binary-world-map_10960466.htm#query=green%20world%20map&position=5&from_view=search&track=ais">Image by GarryKillian</a> on Freepik
+
+Radar credit: Online Tutorials YT https://www.youtube.com/watch?v=HTAQkuaHIqQ

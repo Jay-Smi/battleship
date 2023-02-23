@@ -33,16 +33,17 @@ function loadHomescreen() {
     container.appendChild(
         elem({
             prop: "ul",
+            className: "smokeContainer",
             children: [
-                elem({ prop: "li" }),
-                elem({ prop: "li" }),
-                elem({ prop: "li" }),
-                elem({ prop: "li" }),
-                elem({ prop: "li" }),
-                elem({ prop: "li" }),
-                elem({ prop: "li" }),
-                elem({ prop: "li" }),
-                elem({ prop: "li" }),
+                elem({ prop: "li", className: "smoke" }),
+                elem({ prop: "li", className: "smoke" }),
+                elem({ prop: "li", className: "smoke" }),
+                elem({ prop: "li", className: "smoke" }),
+                elem({ prop: "li", className: "smoke" }),
+                elem({ prop: "li", className: "smoke" }),
+                elem({ prop: "li", className: "smoke" }),
+                elem({ prop: "li", className: "smoke" }),
+                elem({ prop: "li", className: "smoke" }),
             ],
         })
     );
@@ -51,7 +52,7 @@ function loadHomescreen() {
             prop: "footer",
             className: "footer",
             children: [
-                elem({ prop: "span", textContent: "Created by Jayson S, " }),
+                elem({ prop: "span", textContent: "Created by Gluttz, " }),
                 elem({
                     prop: "a",
                     textContent: "Image by upklyak on Freepik",

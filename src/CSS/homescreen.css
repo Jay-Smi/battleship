@@ -81,7 +81,7 @@ body {
     }
 }
 
-ul {
+.smokeContainer {
     position: fixed;
     bottom: 40%;
     left: 65%;
@@ -91,13 +91,13 @@ ul {
 }
 
 @media (max-width: 1200px) {
-    ul {
+    .smoke {
         left: 75%;
     }
 }
 
 @media (max-width: 900px) {
-    ul {
+    .smokeContainer {
         left: 80%;
     }
 
@@ -127,7 +127,7 @@ ul {
     }
 }
 
-li {
+.smoke {
     position: absolute;
     list-style: none;
     width: 80px;
@@ -137,14 +137,14 @@ li {
     filter: blur(15px);
 }
 
-li:nth-child(even) {
+.smoke:nth-child(even) {
     animation: animateEven 3.5s linear infinite;
 }
-li:nth-child(odd) {
+.smoke:nth-child(odd) {
     animation: animateOdd 3.5s linear infinite;
 }
 
-li:nth-child(9) {
+.smoke:nth-child(9) {
     animation: none;
     filter: blur(15px);
 }
@@ -175,27 +175,27 @@ li:nth-child(9) {
     }
 }
 
-li:nth-child(1) {
+.smoke:nth-child(1) {
     animation-delay: 0s;
 }
-li:nth-child(2) {
+.smoke:nth-child(2) {
     animation-delay: 0.4s;
 }
-li:nth-child(3) {
+.smoke:nth-child(3) {
     animation-delay: 0.8s;
 }
-li:nth-child(4) {
+.smoke:nth-child(4) {
     animation-delay: 1.2s;
 }
-li:nth-child(5) {
+.smoke:nth-child(5) {
     animation-delay: 1.6s;
 }
-li:nth-child(6) {
+.smoke:nth-child(6) {
     animation-delay: 2s;
 }
-li:nth-child(7) {
+.smoke:nth-child(7) {
     animation-delay: 2.4s;
 }
-li:nth-child(8) {
+.smoke:nth-child(8) {
     animation-delay: 2.8s;
 }

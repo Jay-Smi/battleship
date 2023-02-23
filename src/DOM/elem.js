@@ -64,6 +64,10 @@ const elem = function (content, version = 1) {
     if (muted) {
         el.muted = true;
     }
+    let loop = content["loop"];
+    if (loop) {
+        el.loop = true;
+    }
     let children = content["children"];
     if (children) {
         for (let child of children) {
