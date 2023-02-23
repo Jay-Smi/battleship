@@ -1,37 +1,20 @@
 import elem from "./elem.js";
 import "../CSS/mapscreen.css";
-// import * as kampos from "kampos";
-import { Kampos, Ticker, effects, transitions } from "kampos";
-import greenPinSrc from "../assets/images/green-pin.png";
-import renPinSrc from "../assets/images/red-pin.png";
+import loadStagingScreen from "./loadStagingScreen.js";
+
+import redPinSrc from "../assets/images/red-pin.png";
+import stickyNoteSrc from "../assets/images/sticky-note.svg";
 
 //add map under everything
 //transition everything away
 function loadMapScreen(options) {
-    console.log(Kampos.effects);
     const body = document.querySelector("body");
-    const redPin1 = new Image();
-    redPin1.src = renPinSrc;
-    redPin1.classList.add("redPin1");
-    const redPin2 = new Image();
-    redPin2.src = renPinSrc;
-    redPin2.classList.add("redPin2");
-    const redPin3 = new Image();
-    redPin3.src = renPinSrc;
-    redPin3.classList.add("redPin3");
-    const greenPin = new Image();
-    greenPin.src = greenPinSrc;
-    greenPin.classList.add("greenPin");
-    const map = elem({ prop: "div", className: "map" });
-    map.appendChild(redPin1);
-    map.appendChild(redPin2);
-    map.appendChild(redPin3);
-    map.appendChild(greenPin);
-    body.prepend(map);
+    const map = buildMap(options);
+    body.appendChild(map);
     const container = document.querySelector("#container");
     container.classList.add("hide");
 
-    setTimeout(renderContainer, 2000);
+    setTimeout(renderContainer, 750);
 }
 
 function renderContainer() {
@@ -40,70 +23,120 @@ function renderContainer() {
     container.remove();
 }
 
-// function loadImage(src) {
-//     return new Promise((resolve) => {
-//         const img = new Image();
-//         img.crossOrigin = "anonymous";
+function buildMap(options) {
+    const redPins = [
+        elem({
+            prop: "img",
+            src: redPinSrc,
+            className: "redPin1",
+            id: "easy",
+        }),
+        elem({
+            prop: "img",
+            src: redPinSrc,
+            className: "redPin2",
+            id: "medium",
+        }),
+        elem({
+            prop: "img",
+            src: redPinSrc,
+            className: "redPin3",
+            id: "hard",
+        }),
+    ];
 
-//         img.onload = function () {
-//             resolve(this);
-//         };
+    redPins.forEach((pin) => {
+        pin.addEventListener("mouseover", (e) => {
+            buildNote(e.target.id, options);
+        });
+        pin.addEventListener("click", (e) => {
+            options.difficulty = e.target.id;
+            loadStagingScreen(options);
+        });
+    });
 
-//         img.src = src;
-//     });
-// }
-// // get the image URLs
-// const imageFromSrc = document.querySelector("#source-from").src;
-// const imageToSrc = document.querySelector("#source-to").dataset.src;
-// // load images
-// const promisedImages = [loadImage(imageFromSrc), loadImage(imageToSrc)];
+    const map = elem({
+        prop: "div",
+        className: "map",
+        children: redPins,
+    });
 
-// const turbulence = kampos.effects.turbulence({
-//     noise: kampos.noise.perlinNoise,
-// });
+    return map;
+}
 
-// const WIDTH = 854;
-// const HEIGHT = 480;
-// const CELL_FACTOR = 4;
-// const AMPLITUDE = CELL_FACTOR / WIDTH;
+function renderNote() {
+    const note = document.querySelector(".noteContainer") || null;
+    if (note) {
+        note.remove();
+    }
+}
 
-// turbulence.frequency = { x: AMPLITUDE, y: AMPLITUDE };
-// turbulence.octaves = 8;
-// turbulence.isFractal = true;
+function buildNote(version, options) {
+    const map = document.querySelector(".map");
+    renderNote();
+    const noteOptions = {
+        note1: {
+            location: "Somalian Coast",
+            difficulty: "Easy",
+            para: "I regret to inform you that a group of Somalian pirates have successfully commandeered an Indian carrier group in the Arabian Sea. ",
+        },
+        note2: {
+            location: "Black Sea",
+            difficulty: "Medium",
+            para: "I am writing to inform you about a group of Russian pirates who have commandeered a Russian carrier group. This group is a significant threat to the safety and security of the area.",
+        },
+        note3: {
+            location: "South China Sea",
+            difficulty: "Hard",
+            para: "A group of Chinese pirates has managed to seize control of a Chinese carrier group, and it poses a significant threat to regional security.",
+        },
+    };
+    let selectedOptions = {};
+    switch (version) {
+        case "easy":
+            selectedOptions = noteOptions.note1;
+            break;
+        case "medium":
+            selectedOptions = noteOptions.note2;
+            break;
+        case "hard":
+            selectedOptions = noteOptions.note3;
+    }
+    const note = elem({
+        prop: "article",
+        className: "noteContainer",
+        children: [
+            elem({
+                prop: "img",
+                src: stickyNoteSrc,
+                className: "stickyNote",
+            }),
+            elem({
+                prop: "div",
+                className: "paraContainer",
+                children: [
+                    elem({
+                        prop: "p",
+                        textContent: `Location: ${selectedOptions.location}`,
+                    }),
+                    elem({
+                        prop: "p",
+                        textContent: `Difficulty: ${selectedOptions.difficulty}`,
+                    }),
+                    elem({
+                        prop: "p",
+                        textContent: `Admiral ${options.playerName},`,
+                    }),
+                    elem({
+                        prop: "p",
+                        textContent: `${selectedOptions.para}`,
+                    }),
+                ],
+            }),
+        ],
+    });
 
-// const mapTarget = document.createElement("canvas");
-// mapTarget.width = WIDTH;
-// mapTarget.height = HEIGHT;
-
-// const dissolveMap = new kampos.Kampos({
-//     target: mapTarget,
-//     effects: [turbulence],
-//     noSource: true,
-// });
-
-// dissolveMap.draw();
-
-// const dissolve = kampos.transitions.dissolve();
-
-// dissolve.map = mapTarget;
-// dissolve.high = 0.3; // for liquid-like effect
-
-// const target = document.querySelector("#target");
-// const hippo = new kampos.Kampos({ target, effects: [dissolve] });
-
-// Promise.all(promisedImages)
-//     .then(([fromImage, toImage]) => {
-//         hippo.setSource({ media: fromImage, width: WIDTH, height: HEIGHT });
-
-//         dissolve.to = toImage;
-//         dissolve.textures[1].update = true;
-//     })
-//     .then(function () {
-//         hippo.play((time) => {
-//             turbulence.time = time * 2;
-//             dissolveMap.draw();
-//             dissolve.progress = Math.abs(Math.sin(time * 2e-4)); // multiply time by a factor to slow it down a bit
-//         });
-//     });
+    map.appendChild(note);
+}
 
 export default loadMapScreen;

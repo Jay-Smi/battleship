@@ -14,7 +14,7 @@ function loadNameScreen() {
     const button = elem({
         prop: "button",
         type: "button",
-        textContent: "Start",
+        textContent: "Continue",
     });
     const nameField = elem({
         prop: "form",

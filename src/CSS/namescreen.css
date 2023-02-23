@@ -62,8 +62,8 @@
     opacity: 1;
 }
 
-#container.hide {
-    animation: burn 1.5s linear;
+.hide {
+    animation: burn 0.5s linear;
     animation-fill-mode: forwards;
 }
 
@@ -71,7 +71,7 @@
     0% {
     }
     100% {
-        transform: translateX(100%);
+        opacity: 0;
     }
 }
 

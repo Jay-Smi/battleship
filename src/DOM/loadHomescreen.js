@@ -1,4 +1,3 @@
-import renderContainer from "./renderContainer.js";
 import elem from "./elem.js";
 import loadNameScreen from "./loadNameScreen.js";
 import background from "../assets/images/homescreen.jpg";
@@ -61,6 +60,13 @@ function loadHomescreen() {
             ],
         })
     );
+}
+
+function renderContainer() {
+    const container = document.querySelector("#container");
+    while (container.firstChild) {
+        container.firstChild.remove();
+    }
 }
 
 export default loadHomescreen;
