@@ -1,13 +1,13 @@
 import elem from "./elem.js";
-import loadNameScreen from "./loadNameScreen.js";
-import background from "../assets/images/homescreen.jpg";
-import "../CSS/homescreen.css";
+import "../CSS/homepage.css";
 
-function loadHomescreen() {
-    renderContainer();
-    const container = document.querySelector("#container");
-    container.style.backgroundImage = background;
-    container.appendChild(
+function homePage() {
+    const homepageContainer = elem({
+        prop: "div",
+        className: "homepageContainer",
+    });
+
+    homepageContainer.appendChild(
         elem({
             prop: "header",
             textContent: "BATTLESHIP",
@@ -25,12 +25,9 @@ function loadHomescreen() {
             }),
         ],
     });
-    newGame.firstChild.addEventListener("click", () => {
-        loadNameScreen();
-    });
 
-    container.appendChild(newGame);
-    container.appendChild(
+    homepageContainer.appendChild(newGame);
+    homepageContainer.appendChild(
         elem({
             prop: "ul",
             className: "smokeContainer",
@@ -47,7 +44,7 @@ function loadHomescreen() {
             ],
         })
     );
-    container.appendChild(
+    homepageContainer.appendChild(
         elem({
             prop: "footer",
             className: "footer",
@@ -61,13 +58,18 @@ function loadHomescreen() {
             ],
         })
     );
+
+    return {
+        element: homepageContainer,
+        listeners: [
+            {
+                targetElem: newGame.firstChild,
+                event: "click",
+                type: "stateChange",
+                newState: "namePage",
+            },
+        ],
+    };
 }
 
-function renderContainer() {
-    const container = document.querySelector("#container");
-    while (container.firstChild) {
-        container.firstChild.remove();
-    }
-}
-
-export default loadHomescreen;
+export default homePage;

@@ -11,10 +11,6 @@ function loadStagingScreen(options) {
     const body = document.querySelector("body");
     const gameContainer = buildUI(options);
     body.prepend(gameContainer);
-    const p1GB = buildGameboard();
-    const p1gameBoardContainer = document.querySelector(
-        ".p1gameBoardContainer"
-    );
 }
 
 function buildUI(options) {
@@ -33,13 +29,12 @@ function buildUI(options) {
                         autoplay: true,
                         loop: true,
                     }),
+
                     elem({
                         prop: "div",
                         className: "shipBow",
                         children: [
                             elem({ prop: "div", className: "shipBowWood" }),
-                            elem({ prop: "div", className: "shipBowHole" }),
-                            elem({ prop: "div", className: "shipBowHole1" }),
                             elem({ prop: "div", className: "flakBarrel1" }),
                             elem({ prop: "div", className: "flakBarrel2" }),
                             elem({ prop: "div", className: "flakBarrel3" }),
@@ -50,7 +45,6 @@ function buildUI(options) {
                             elem({ prop: "div", className: "flakCoverTop" }),
                         ],
                     }),
-                    elem({ prop: "div", className: "p1GameboardContainer" }),
                 ],
             }),
             elem({
@@ -219,10 +213,6 @@ function buildUI(options) {
     });
 
     return gameContainer;
-}
-
-function buildGameboard() {
-    const board = elem({ prop: "div", className: "" });
 }
 
 export default loadStagingScreen;

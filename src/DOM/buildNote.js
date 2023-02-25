@@ -1,79 +1,7 @@
-import elem from "./elem.js";
-import "../CSS/mapscreen.css";
-import loadStagingScreen from "./loadStagingScreen.js";
-
-import redPinSrc from "../assets/images/red-pin.png";
+import elem from "./elem";
 import stickyNoteSrc from "../assets/images/sticky-note.svg";
 
-//add map under everything
-//transition everything away
-function loadMapScreen(options) {
-    const body = document.querySelector("body");
-    const map = buildMap(options);
-    body.appendChild(map);
-    const container = document.querySelector("#container");
-    container.classList.add("hide");
-
-    setTimeout(renderContainer, 750);
-}
-
-function renderContainer() {
-    const container = document.querySelector("#container");
-
-    container.remove();
-}
-
-function buildMap(options) {
-    const redPins = [
-        elem({
-            prop: "img",
-            src: redPinSrc,
-            className: "redPin1",
-            id: "easy",
-        }),
-        elem({
-            prop: "img",
-            src: redPinSrc,
-            className: "redPin2",
-            id: "medium",
-        }),
-        elem({
-            prop: "img",
-            src: redPinSrc,
-            className: "redPin3",
-            id: "hard",
-        }),
-    ];
-
-    redPins.forEach((pin) => {
-        pin.addEventListener("mouseover", (e) => {
-            buildNote(e.target.id, options);
-        });
-        pin.addEventListener("click", (e) => {
-            options.difficulty = e.target.id;
-            loadStagingScreen(options);
-        });
-    });
-
-    const map = elem({
-        prop: "div",
-        className: "map",
-        children: redPins,
-    });
-
-    return map;
-}
-
-function renderNote() {
-    const note = document.querySelector(".noteContainer") || null;
-    if (note) {
-        note.remove();
-    }
-}
-
-function buildNote(version, options) {
-    const map = document.querySelector(".map");
-    renderNote();
+function buildNote(viewModel) {
     const noteOptions = {
         note1: {
             location: "Somalian Coast",
@@ -92,7 +20,7 @@ function buildNote(version, options) {
         },
     };
     let selectedOptions = {};
-    switch (version) {
+    switch (viewModel.note) {
         case "easy":
             selectedOptions = noteOptions.note1;
             break;
@@ -101,6 +29,7 @@ function buildNote(version, options) {
             break;
         case "hard":
             selectedOptions = noteOptions.note3;
+            break;
     }
     const note = elem({
         prop: "article",
@@ -125,7 +54,7 @@ function buildNote(version, options) {
                     }),
                     elem({
                         prop: "p",
-                        textContent: `Admiral ${options.playerName},`,
+                        textContent: `Admiral ${viewModel.playerName},`,
                     }),
                     elem({
                         prop: "p",
@@ -136,7 +65,7 @@ function buildNote(version, options) {
         ],
     });
 
-    map.appendChild(note);
+    return { element: note };
 }
 
-export default loadMapScreen;
+export default buildNote;

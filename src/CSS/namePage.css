@@ -63,7 +63,7 @@
 }
 
 .hide {
-    animation: burn 0.5s linear;
+    animation: burn 1s linear;
     animation-fill-mode: forwards;
 }
 
