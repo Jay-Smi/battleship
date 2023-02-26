@@ -13,7 +13,34 @@ function loadStagingScreen(options) {
     body.prepend(gameContainer);
 }
 
-function buildUI(options) {
+function gamePage(viewModel) {
+    const leftButton = elem({
+        prop: "button",
+        id: "activate",
+        children: [elem({ prop: "span" })],
+    });
+    const middleButton = elem({
+        prop: "button",
+        id: "activate",
+        children: [elem({ prop: "span" })],
+    });
+    const rightButton = elem({
+        prop: "button",
+        id: "activate",
+        children: [elem({ prop: "span" })],
+    });
+    const buttons = [leftButton, middleButton, rightButton];
+    const buttonListeners = [];
+
+    buttons.forEach((btn) => {
+        buttonListeners.push({
+            targetElem: btn,
+            event: "click",
+            type: "stateChange",
+            newState: "gamePage",
+        });
+    });
+
     const gameContainer = elem({
         prop: "div",
         className: "gameContainer",
@@ -140,20 +167,12 @@ function buildUI(options) {
                                     elem({
                                         prop: "div",
                                         className: "base",
-                                        children: [
-                                            elem({
-                                                prop: "button",
-                                                id: "activate",
-                                                children: [
-                                                    elem({ prop: "span" }),
-                                                ],
-                                            }),
-                                        ],
+                                        children: [leftButton],
                                     }),
                                     elem({
                                         prop: "div",
                                         className: "buttonText",
-                                        textContent: "Begin",
+                                        textContent: "Rotate",
                                     }),
                                 ],
                             }),
@@ -164,20 +183,12 @@ function buildUI(options) {
                                     elem({
                                         prop: "div",
                                         className: "base",
-                                        children: [
-                                            elem({
-                                                prop: "button",
-                                                id: "activate",
-                                                children: [
-                                                    elem({ prop: "span" }),
-                                                ],
-                                            }),
-                                        ],
+                                        children: [middleButton],
                                     }),
                                     elem({
                                         prop: "div",
                                         className: "buttonText",
-                                        textContent: "Reset",
+                                        textContent: "Begin",
                                     }),
                                 ],
                             }),
@@ -188,20 +199,12 @@ function buildUI(options) {
                                     elem({
                                         prop: "div",
                                         className: "base",
-                                        children: [
-                                            elem({
-                                                prop: "button",
-                                                id: "activate",
-                                                children: [
-                                                    elem({ prop: "span" }),
-                                                ],
-                                            }),
-                                        ],
+                                        children: [rightButton],
                                     }),
                                     elem({
                                         prop: "div",
                                         className: "buttonText",
-                                        textContent: "Options",
+                                        textContent: "Reset",
                                     }),
                                 ],
                             }),
@@ -212,7 +215,10 @@ function buildUI(options) {
         ],
     });
 
-    return gameContainer;
+    return {
+        element: gameContainer,
+        listeners: buttonListeners,
+    };
 }
 
-export default loadStagingScreen;
+export default gamePage;

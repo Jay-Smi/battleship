@@ -24,8 +24,6 @@ class BattleshipView {
     }
 
     createView(newViewModel) {
-        console.log(newViewModel);
-        console.log(this.oldModel);
         let view = null;
         if (
             newViewModel.state !== this.oldModel.state ||
@@ -49,13 +47,26 @@ class BattleshipView {
                     view = mapPage(newViewModel);
                     break;
                 case "gamePage":
+                    this.container = document.querySelector("#container");
+                    let oldMap = document.querySelector(".map");
+                    oldMap.classList.add("hide");
+                    setTimeout(() => oldMap.remove(), 750);
+                    view = gamePage(newViewModel);
+                    break;
             }
         }
         if (newViewModel.note) {
-            const note = document.querySelector(".noteContainer") || null;
+            const note =
+                document.querySelector(".noteContainer") ||
+                document.querySelector(".stagePara") ||
+                null;
             if (note) note.remove();
             this.container = document.querySelector(".map");
             view = buildNote(newViewModel);
+        }
+        if (newViewModel.player) {
+            console.log("here");
+            console.log(newViewModel);
         }
 
         return view;
@@ -70,6 +81,8 @@ class BattleshipView {
             container.firstChild.remove();
         }
     }
+
+    displayBoard(board) {}
 }
 
 export default BattleshipView;

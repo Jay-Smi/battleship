@@ -1,16 +1,16 @@
 import BattleshipView from "./DOM/BattleshipView.js";
-import BattleshipModel from "./components/BattleshipModel .js";
+import BattleshipGame from "./components/BattleshipGame .js";
 
 // loadHomescreen();
 
 //controller works with data and receive alerts from data
 //tells view to update based on data
 
-class BattleshipModelView {
-    constructor() {
+class BattleshipViewModel {
+    constructor(view) {
         this.viewModel = { state: "homePage" };
         this.model = null;
-        this.view = new BattleshipView({ state: "homePage" });
+        this.view = view;
         this.updateView(this.viewModel);
     }
 
@@ -18,6 +18,7 @@ class BattleshipModelView {
         for (let key in viewModel) {
             this.viewModel[key] = viewModel[key];
         }
+        this.updateView(this.viewModel);
     }
 
     updateView(viewModel) {
@@ -25,15 +26,17 @@ class BattleshipModelView {
         if (update.listeners) {
             this.handleListeners(update.listeners);
         }
-        if (update.inputs) {
-            this.handleInputs(update.inputs);
-        }
     }
 
     handleListeners(listenerArray) {
         listenerArray.forEach((listener) => {
             listener.targetElem.addEventListener(listener.event, (e) => {
                 if (listener.type === "stateChange") {
+                    if (listener.newState === "namePage") {
+                        this.updateViewModel({
+                            state: listener.newState,
+                        });
+                    }
                     if (listener.newState === "mapPage") {
                         this.updateViewModel({
                             state: listener.newState,
@@ -41,15 +44,11 @@ class BattleshipModelView {
                         });
                     }
                     if (listener.newState === "gamePage") {
+                        this.startGame();
                         this.updateViewModel({
                             state: listener.newState,
                             note: null,
                             difficulty: listener.targetElem.id,
-                        });
-                    }
-                    if (listener.newState === "namePage") {
-                        this.updateViewModel({
-                            state: listener.newState,
                         });
                     }
                 }
@@ -58,13 +57,16 @@ class BattleshipModelView {
                         note: listener.targetElem.id,
                     });
                 }
-                this.updateView(this.viewModel);
             });
         });
     }
 
-    startGame() {}
-
+    startGame() {
+        this.model = new BattleshipGame(
+            JSON.parse(JSON.stringify(this.viewModel))
+        );
+        this.updateViewModel(this.model);
+    }
     updateBoard() {}
 
     handleMove() {}
@@ -72,7 +74,7 @@ class BattleshipModelView {
     endGame() {}
 }
 
-new BattleshipModelView();
+new BattleshipViewModel(new BattleshipView({ state: "homePage" }));
 
 // class Model {
 //     constructor(initModel, listener) {
