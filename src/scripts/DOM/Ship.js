@@ -81,8 +81,8 @@ export default class Ship {
     }
 
     handleDragStart(e) {
-        e.dataTransfer.setData("text/plain", this.id);
-        this.element.classList.add("dragging");
+        // e.dataTransfer.setData("text/plain", this.id);
+        // this.element.classList.add("dragging");
 
         this.tiles.forEach((tile) => {
             tile.style.width = "50px";

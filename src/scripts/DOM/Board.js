@@ -1,7 +1,9 @@
 import elem from "./elem.js";
 
 export default class Board {
-    constructor(size) {
+    constructor(size, PubSub) {
+        this.PubSub = PubSub;
+
         this.size = size;
         this.element = this.createElement();
         this.cells = this.createCells();
@@ -31,13 +33,20 @@ export default class Board {
 
     createCells() {
         const cells = [];
+
         for (let row = 0; row < this.size; row++) {
             for (let col = 0; col < this.size; col++) {
                 const cell = elem({ prop: "div", className: "cell" });
+
                 cell.dataset.row = row;
                 cell.dataset.col = col;
+
                 cell.addEventListener("dragenter", (e) => {
                     const bound = this.handleDragEnter.bind(this);
+                    bound(e, row, col);
+                });
+                cell.addEventListener("drop", (e) => {
+                    const bound = this.handleDrop.bind(this);
                     bound(e, row, col);
                 });
 
@@ -55,22 +64,23 @@ export default class Board {
         return this.cells[row * this.size + col];
     }
 
+    getCells(size, row, col, isHorizontal) {
+        const cells = [];
+
+        for (let i = 0; i < size; i++) {
+            const currentRow = isHorizontal ? row : row + i;
+            const currentCol = isHorizontal ? col + i : col;
+            const cell = this.getCell(currentRow, currentCol);
+            cells.push(cell);
+        }
+
+        return cells;
+    }
+
     getCellPosition(element) {
         const row = Number(element.dataset.row);
         const col = Number(element.dataset.col);
         return { x: col, y: row };
-    }
-
-    checkValidPlacement(tiles) {
-        for (const tile of tiles) {
-            if (!tile) {
-                return false;
-            }
-            if (tile.classList.contains("selected")) {
-                return false;
-            }
-        }
-        return true;
     }
 
     getBaseTile(ship, row, col) {
@@ -118,7 +128,7 @@ export default class Board {
 
     placeShip(ship, row, col) {
         const cells = this.getCells(ship.size, row, col, ship.isHorizontal);
-        if (cells.every(({ row, col }) => this.grid[row][col] === EMPTY)) {
+        if (cells.every(({ row, col }) => this.board[row][col] === EMPTY)) {
             // all cells are empty, so place the ship
             cells.forEach(({ row, col }) => {
                 this.grid[row][col] = ship.id;
@@ -208,6 +218,25 @@ export default class Board {
                 rowOffset = isHorizontal ? rowOffset : rowOffset + 1;
                 colOffset = isHorizontal ? colOffset + 1 : colOffset;
             }
+        }
+    }
+
+    handleDrop(e, row, col) {
+        e.preventDefault();
+
+        const ship = this.shipQueue.activeShip;
+        let baseCoords = this.getBaseTile(ship, row, col);
+        let baseRow = baseCoords.row;
+        let baseCol = baseCoords.col;
+
+        let isValid = this.isValidPlacement(ship, baseRow, baseCol);
+        if (isValid) {
+            this.PubSub.publish("shipPlaced", {
+                e,
+                size: ship.size,
+                baseRow,
+                baseCol,
+            });
         }
     }
 }

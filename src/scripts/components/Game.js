@@ -1,4 +1,3 @@
-import PubSub from "../PubSub.js";
 import Player from "./player.js";
 import AI from "./AI.js";
 
@@ -7,7 +6,7 @@ export default class Game {
         this.PubSub = PubSub;
         this.player = null;
         this.AI = null;
-        this.turn = "player";
+        this.turn = null;
         this.PubSub.subscribe("formSubmit", this.handleFormSubmit.bind(this));
         this.PubSub.subscribe(
             "difficultySubmit",

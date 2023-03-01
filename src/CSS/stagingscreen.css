@@ -757,6 +757,10 @@ button#activate.pushed {
         transform: scale(0.7);
         border: none;
     }
+    .waves {
+        top: 50px;
+        transform: scale(1.5);
+    }
 }
 
 @media (max-width: 1200px) {
@@ -786,7 +790,7 @@ button#activate.pushed {
     }
     .waves {
         top: 50px;
-        transform: scale(1.5);
+        transform: scale(2);
     }
 }
 
@@ -814,9 +818,6 @@ button#activate.pushed {
         flex: 1;
         padding: 0;
         margin: 0;
-    }
-
-    .game {
     }
 
     .board {

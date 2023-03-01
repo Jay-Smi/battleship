@@ -16,24 +16,11 @@ export default class GameStaging {
             this.handleDataResponse.bind(this)
         );
 
-        //requested through data request
         this.gameData = null;
 
-        //board object accepts parent elem,
-        //maintains reference to current ship for dragenter
-        //list of ships once placed???
-        //the shipQueue????
-        //dragenter logic
         this.playerBoard = null;
 
-        //accepts a list of ships and a board
-        //manages current ship
-        //has .next() .handleRotate() .getCurrentShip()
-        //converts the ship info into ship objects
         this.shipQueue = null;
-
-        //this.shipList??? maybe needed? maybe ships
-        //stored in queue than passed to board
     }
 
     handlePageChange(data) {
@@ -52,7 +39,10 @@ export default class GameStaging {
 
         const gameContainer = document.querySelector(".game");
 
-        this.playerBoard = new Board(this.gameData.player.gameboard.size);
+        this.playerBoard = new Board(
+            this.gameData.player.gameboard.size,
+            this.PubSub
+        );
 
         this.shipQueue = new ShipQueue(
             this.playerBoard,
