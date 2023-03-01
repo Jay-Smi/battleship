@@ -24,8 +24,8 @@ export default class Board {
 
     createElement() {
         const element = elem({ prop: "div", className: "board" });
-        element.style.gridTemplateRows = `repeat(${this.size}, 50px)`;
-        element.style.gridTemplateColumns = `repeat(${this.size}, 50px)`;
+        // element.style.gridTemplateRows = `repeat(${this.size}, 50px)`;
+        // element.style.gridTemplateColumns = `repeat(${this.size}, 50px)`;
         return element;
     }
 

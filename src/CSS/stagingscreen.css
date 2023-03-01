@@ -407,7 +407,6 @@ button#activate.pushed {
     transform: scale(1.8);
     pointer-events: none;
     background: transparent;
-    color: white;
 }
 
 .shipOverlay.vertical {
@@ -476,7 +475,8 @@ button#activate.pushed {
     border-top-left-radius: 5%;
     border-top-right-radius: 5%;
     display: grid;
-    grid-template-columns: repeat(10, 1fr);
+    grid-template-rows: repeat(10, 50px);
+    grid-template-columns: repeat(10, 50px);
 }
 
 .tile {
@@ -743,5 +743,102 @@ button#activate.pushed {
     .flakBarrel5,
     .flakBarrel6 {
         transform: translate(-50px, 0px) rotate(20deg);
+    }
+}
+
+@media (max-width: 1500px) {
+    .radarContainer {
+        position: fixed;
+        top: -20px;
+        left: -50px;
+        height: 300px;
+        width: 350px;
+        background-color: transparent;
+        transform: scale(0.7);
+        border: none;
+    }
+}
+
+@media (max-width: 1200px) {
+    .buttonContainer {
+        position: fixed;
+        flex-direction: column;
+        right: 0;
+        top: 0;
+        background-color: grey;
+        transform: scale(0.8);
+    }
+
+    .flakBarrel1,
+    .flakBarrel2,
+    .flakBarrel3,
+    .flakBarrel4,
+    .flakBarrel5,
+    .flakBarrel6 {
+        transform: translate(-150px, 0px) rotate(20deg);
+    }
+    .flakCover,
+    .flakCoverTop {
+        transform: translate(-150px);
+    }
+    .shipBowWood {
+        left: 100px;
+    }
+    .waves {
+        top: 50px;
+        transform: scale(1.5);
+    }
+}
+
+@media (max-width: 950px) {
+    .radarContainer {
+        transform: scale(0.5);
+        top: -50px;
+        left: -80px;
+    }
+
+    .buttonContainer {
+        position: static;
+        flex-direction: row;
+        width: 100%;
+    }
+    .p1OptionsContainer {
+        flex-direction: column;
+
+        overflow: hidden;
+        height: 60vh;
+    }
+
+    .p1GridContainer {
+        display: flex;
+        flex: 1;
+        padding: 0;
+        margin: 0;
+    }
+
+    .game {
+    }
+
+    .board {
+        margin-top: none;
+        grid-template-rows: repeat(10, 30px);
+        grid-template-columns: repeat(10, 30px);
+    }
+    .cell {
+        width: 30px;
+        height: 30px;
+    }
+    .radarContainer {
+        top: auto;
+        left: auto;
+        bottom: -50px;
+        right: -100px;
+        z-index: 5;
+    }
+}
+
+@media (max-width: 600px) {
+    .radarContainer {
+        display: none;
     }
 }
