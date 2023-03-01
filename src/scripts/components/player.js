@@ -5,12 +5,12 @@ class Player {
     constructor(name) {
         this.name = name;
         this.turn = false;
-        this.gameboard = new Gameboard(this.name);
+        this.gameboard = new Gameboard(10);
         this.carrier = new Ship(5, "Carrier");
         this.battleship = new Ship(4, "Battleship");
         this.destroyer = new Ship(3, "Destroyer");
         this.submarine = new Ship(3, "Submarine");
-        this.patrolBoat = new Ship(2, "Patrol Boat");
+        this.patrolBoat = new Ship(2, "Patrol-Boat");
         this.allShips = [
             this.carrier,
             this.battleship,

@@ -1,18 +1,32 @@
 import Tile from "./tile.js";
 
 class Gameboard {
-    constructor(player) {
-        this.player = player;
-        this.board = [];
-        for (let x = 0; x < 10; x++) {
-            this.board[x] = [];
-            for (let y = 0; y < 10; y++) {
-                this.board[x][y] = new Tile(x, y);
-            }
-        }
+    constructor(size) {
+        this.size = size;
+        this.board = this.buildBoard();
         this.orientation = true; //true vertical, false horizontal
     }
 
+    buildBoard() {
+        const tempBoard = [];
+
+        for (let y = 0; y < this.size; y++) {
+            tempBoard[y] = [];
+            for (let x = 0; x < this.size; x++) {
+                tempBoard[y][x] = new Tile(x, y);
+            }
+        }
+
+        // for (let x = 0; x < this.size; x++) {
+        //     tempBoard[x] = [];
+        //     for (let y = 0; y < this.size; y++) {
+        //         tempBoard[x][y] = new Tile(x, y);
+        //     }
+        // }
+        return tempBoard;
+    }
+
+    //must edit to accept orientation from event rather that class be stated
     placeShip(x, y, ship) {
         if (this.isValidPlacement(x, y, ship.length)) {
             if (this.orientation) {

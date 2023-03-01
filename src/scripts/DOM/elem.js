@@ -1,4 +1,4 @@
-const elem = function (content, version = 1) {
+const elem = (content, version = 1) => {
     let el = document.createElement(content["prop"]);
     let text = content["textContent"];
     if (text) {
@@ -68,6 +68,10 @@ const elem = function (content, version = 1) {
     if (loop) {
         el.loop = true;
     }
+    let draggable = content["draggable"];
+    if (draggable) {
+        el.draggable = true;
+    }
     let children = content["children"];
     if (children) {
         for (let child of children) {
@@ -80,5 +84,28 @@ const elem = function (content, version = 1) {
     }
     return el;
 };
+
+// function elem(content) {
+//     const el = document.createElement(content["prop"]);
+
+//     for (let key in content) {
+//         if (content[key] === "prop") {
+//             continue;
+//         } else if (key === "classList") {
+//             for (let className of content[classList]) {
+//                 el.classList.add(content[classList][className]);
+//             }
+//         } else if (key === "children") {
+//             console.log(content[key]);
+//             for (let child of content[key]) {
+//                 el.appendChild(elem(content[key][child]));
+//             }
+//         } else {
+//             el[key] = content[key];
+//         }
+//     }
+
+//     return el;
+// }
 
 export default elem;
