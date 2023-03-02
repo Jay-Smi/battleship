@@ -4,7 +4,7 @@ class Gameboard {
     constructor(size) {
         this.size = size;
         this.board = this.buildBoard();
-        this.orientation = true; //true vertical, false horizontal
+        // this.orientation = true; //true vertical, false horizontal
         this.ships = [];
     }
 
@@ -30,7 +30,7 @@ class Gameboard {
     //must edit to accept orientation from event rather that class be stated
     placeShip(x, y, ship) {
         if (this.isValidPlacement(x, y, ship.length)) {
-            if (this.orientation) {
+            if (ship.isHorizontal) {
                 for (let i = 0; i < ship.length; i++) {
                     this.board[x][y - i].ship = ship;
                 }

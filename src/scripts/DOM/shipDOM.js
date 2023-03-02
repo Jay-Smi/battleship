@@ -11,11 +11,17 @@ export default class Ship {
         this.id = id;
         this.size = size;
         this.isHorizontal = false;
+
+        // contains child divs for clicked index reference
         this.tiles = [];
-        this.element = this.create();
         this.clickedIndex = null;
+        //contains the ship image for display
         this.Overlay = null;
 
+        this.element = this.create();
+
+        // scales the ship to more closely match the size of the board's grids
+        // for 0ms before reverting to original size
         this.element.addEventListener(
             "dragstart",
             this.handleDragStart.bind(this)
@@ -23,11 +29,14 @@ export default class Ship {
     }
 
     create() {
+        //ships container
         const ship = document.createElement("div");
         ship.id = this.id;
         ship.classList.add("ship");
         ship.draggable = true;
         let shipSrc = null;
+
+        // matches name of ship to the image source file
         switch (this.id) {
             case "Carrier":
                 shipSrc = carrierSrc;
@@ -45,6 +54,8 @@ export default class Ship {
                 shipSrc = patrolBoatSrc;
         }
 
+        // creates the inner divs for each ship
+        // based on the size
         for (let i = 0; i < this.size; i++) {
             const tile = document.createElement("div");
             tile.classList.add("tile");
@@ -52,18 +63,22 @@ export default class Ship {
             tile.dataset.tile = i;
             tile.draggable = false;
 
+            //add head class to front for styling
             if (i === 0) tile.classList.add("head");
-
+            //add tail class to tail for styling
             if (i == this.size - 1) tile.classList.add("tail");
 
+            // adds click listener to set clicked index
             tile.addEventListener("mousedown", (e) => {
                 this.clickedIndex = i;
             });
 
+            // add tiles to the ship
             this.tiles.push(tile);
             ship.appendChild(tile);
         }
 
+        // spice up the ship display
         const shipOverlay = elem({
             prop: "img",
             className: `shipOverlay`,
@@ -82,8 +97,8 @@ export default class Ship {
     }
 
     handleDragStart(e) {
-        // e.dataTransfer.setData("text/plain", this.id);
-        // this.element.classList.add("dragging");
+        // grow the dragged ship upon click in order
+        // to match gameboard size
 
         this.tiles.forEach((tile) => {
             tile.style.width = "40px";
@@ -96,6 +111,8 @@ export default class Ship {
     }
 
     rotate() {
+        // swap ship's flex-direction via class swap
+        // do the same for the overlay
         this.isHorizontal = !this.isHorizontal;
         this.element.classList.toggle("horizontal", this.isHorizontal);
         this.element.classList.toggle("vertical", !this.isHorizontal);

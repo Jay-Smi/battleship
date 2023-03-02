@@ -1,15 +1,19 @@
 import elem from "./elem.js";
 
 export default class Board {
-    constructor(board, PubSub, playerShipQueue) {
+    constructor(board, PubSub, shipQueue) {
         this.PubSub = PubSub;
 
-        this.playerBoard = board;
-        this.element = this.createElement();
-        this.cells = this.createCells();
+        // keeps copy of latest model info for ease of access
+        this.gameboard = board;
+        this.shipQueue = shipQueue;
         this.ships = [];
 
-        this.shipQueue = playerShipQueue;
+        // build the board
+        this.element = elem({ prop: "div", className: "board" });
+        this.cells = this.createCells();
+
+        // add a listener to prevent default on drag events
         this.element.addEventListener(
             "dragover",
             this.handleDragOver.bind(this)
@@ -19,31 +23,36 @@ export default class Board {
             this.handleDragLeave.bind(this)
         );
 
+        // append the board
         this.container = document.querySelector(".p1GridContainer");
         this.container.appendChild(this.element);
     }
 
-    updateQueue(shipQueue) {
-        this.shipQueue = shipQueue;
-    }
+    // updateQueue(shipQueue) {
+    //     this.shipQueue = shipQueue;
+    // }
 
-    createElement() {
-        const element = elem({ prop: "div", className: "board" });
-        // element.style.gridTemplateRows = `repeat(${this.size}, 50px)`;
-        // element.style.gridTemplateColumns = `repeat(${this.size}, 50px)`;
-        return element;
-    }
+    //                   use for custom board sizes
+    // createElement() {
+    //     const element = elem({ prop: "div", className: "board" });
+    //     // element.style.gridTemplateRows = `repeat(${this.size}, 50px)`;
+    //     // element.style.gridTemplateColumns = `repeat(${this.size}, 50px)`;
+    //     return element;
+    // }
 
     createCells() {
+        // creates the board DOM elements
         const cells = [];
 
-        for (let row = 0; row < this.playerBoard.size; row++) {
-            for (let col = 0; col < this.playerBoard.size; col++) {
+        for (let row = 0; row < this.gameboard.size; row++) {
+            for (let col = 0; col < this.gameboard.size; col++) {
                 const cell = elem({ prop: "div", className: "cell" });
 
+                // sets data values for coordinates
                 cell.dataset.row = row;
                 cell.dataset.col = col;
 
+                // adds the dragenter and drop listener
                 cell.addEventListener("dragenter", (e) => {
                     const bound = this.handleDragEnter.bind(this);
                     bound(e, row, col);
@@ -53,6 +62,8 @@ export default class Board {
                     bound(e, row, col);
                 });
 
+                // appends the cell to the board container
+                // adds a reference to the DOM cell to the cells array
                 this.element.appendChild(cell);
                 cells.push(cell);
             }
@@ -60,18 +71,20 @@ export default class Board {
         return cells;
     }
 
+    // returns the DOM element for a given coordinate
     getCell(row, col) {
         if (
             row < 0 ||
-            row >= this.playerBoard.size ||
+            row >= this.gameboard.size ||
             col < 0 ||
-            col >= this.playerBoard.size
+            col >= this.gameboard.size
         ) {
             return null;
         }
-        return this.cells[row * this.playerBoard.size + col];
+        return this.cells[row * this.gameboard.size + col];
     }
 
+    // returns the DOM elements for given coordinates and ship
     getCells(size, row, col, isHorizontal) {
         const cells = [];
 
@@ -85,17 +98,21 @@ export default class Board {
         return cells;
     }
 
+    // get coordinates based on element's dataset
     getCellPosition(element) {
         const row = Number(element.dataset.row);
         const col = Number(element.dataset.col);
         return { x: col, y: row };
     }
 
+    // calculates the left most or top most tile
     getBaseTile(ship, row, col) {
+        // gets the index that the ship was picked up by
         const index = ship.clickedIndex;
         let offsetRow = 0;
         let offsetCol = 0;
 
+        // offsets the hovered tile according to the grabbed index
         if (ship.isHorizontal === true) {
             offsetCol = index;
         } else {
@@ -108,20 +125,25 @@ export default class Board {
         return { row: baseRow, col: baseCol };
     }
 
+    //additional validation by the model before placeship event fulfilled
+    // assumes row, col is the base tile
     isValidPlacement(ship, row, col) {
+        // checks if all hovered tiles are on the board
         if (ship.isHorizontal === true && col + ship.size > this.cols) {
             return false;
         }
         if (ship.isHorizontal === false && row + ship.size > this.rows) {
             return false;
         }
-
+        // iterates over every tile
+        // and checks if the gameboard contains a ship
+        // checks gameboard model along with a css class
         for (let i = 0; i < ship.size; i++) {
             const cell = this.getCell(row, col);
             if (cell) {
                 if (
                     cell.classList.contains("ship") ||
-                    this.playerBoard.board[row][col].ship
+                    this.gameboard.board[row][col].ship
                 ) {
                     return false;
                 }
@@ -141,7 +163,7 @@ export default class Board {
         const cells = this.getCells(ship.size, row, col, ship.isHorizontal);
         if (
             cells.every(
-                ({ row, col }) => this.playerBoard.board[row][col] === EMPTY
+                ({ row, col }) => this.gameboard.board[row][col] === EMPTY
             )
         ) {
             // all cells are empty, so place the ship
@@ -176,27 +198,35 @@ export default class Board {
 
     handleDragEnter(e, row, col) {
         e.preventDefault();
+
+        // get all tiles with prior hover effects
         const tiles = Array.from(
             document.querySelectorAll(".hover", ".valid", ".invalid")
         );
+        // clear their hover effects
         tiles.forEach((tile) => {
             tile.classList.remove("hover", "invalid", "valid");
         });
+        // get the current ship in the queue
         const ship = this.shipQueue.activeShip;
         const isHorizontal = ship.isHorizontal;
         const length = ship.size;
-        let baseCoords = this.getBaseTile(ship, row, col);
-        let baseRow = baseCoords.row;
-        let baseCol = baseCoords.col;
-
+        // calculate the base tile for the dragged ship
+        // based on the ship index that was clicked and tile current hovered
+        // (left most for horizontal, top most for vertical)
+        const baseCoords = this.getBaseTile(ship, row, col);
+        const baseRow = baseCoords.row;
+        const baseCol = baseCoords.col;
+        // check if hovered tiles are all on the board and dont overlap a ship
         let isValid = this.isValidPlacement(ship, baseRow, baseCol);
-
         let rowOffset = baseRow;
         let colOffset = baseCol;
+        // aquire the div for every cell
+        // and style according to validity
         for (let i = 0; i < length; i++) {
             if (
-                rowOffset >= this.playerBoard.size ||
-                colOffset >= this.playerBoard.size
+                rowOffset >= this.gameboard.size ||
+                colOffset >= this.gameboard.size
             ) {
                 isValid = false;
                 break;
