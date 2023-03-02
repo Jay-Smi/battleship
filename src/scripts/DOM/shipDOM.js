@@ -15,6 +15,7 @@ export default class Ship {
         this.element = this.create();
         this.clickedIndex = null;
         this.Overlay = null;
+
         this.element.addEventListener(
             "dragstart",
             this.handleDragStart.bind(this)
@@ -85,8 +86,8 @@ export default class Ship {
         // this.element.classList.add("dragging");
 
         this.tiles.forEach((tile) => {
-            tile.style.width = "50px";
-            tile.style.height = "50px";
+            tile.style.width = "40px";
+            tile.style.height = "40px";
             setTimeout(() => {
                 tile.style.width = "30px";
                 tile.style.height = "30px";

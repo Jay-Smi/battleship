@@ -3,30 +3,38 @@ import "../../CSS/mappage.css";
 import redPinSrc from "../../assets/images/red-pin.png";
 import stickyNoteSrc from "../../assets/images/sticky-note.svg";
 
-export default class Mappage {
-    constructor(PubSub) {
+export default class MapPage {
+    constructor(PubSub, container, newState) {
         this.PubSub = PubSub;
-        this.PubSub.subscribe("pageChange", this.handlePageChange.bind(this));
-        this.PubSub.subscribe(
-            "dataResponse",
-            this.handleDataResponse.bind(this)
-        );
-        this.dataResponse = null;
-    }
-    handlePageChange(data) {
-        if (data === "mappage") this.loadMap();
-        if (data.hasOwnProperty("difficulty")) this.loadNote(data);
-        if (data === "gamepage") this.removeMap();
+
+        //save state to grab player name
+        this.state = newState;
+
+        //save player name
+        this.nameRef = newState.player.name;
+
+        this.container = container;
+
+        this.element = this.buildMap(newState);
     }
 
-    handleDataResponse(data) {
-        this.dataResponse = data;
+    updateView(changed) {
+        // if changing to the map page
+        if (changed.currentPage) {
+            this.removeHomepage();
+            this.container.appendChild(this.element);
+        }
+        // if pin hovered
+        if (changed.stateMessage) {
+            this.loadNote(changed);
+        }
     }
 
-    loadMap() {
-        const container = document.querySelector("#container");
-        const element = this.buildMap();
-        container.appendChild(element);
+    // clear the container, add timeout for transition
+    removeHomepage() {
+        const oldPage = document.querySelector(".homepageContainer");
+        oldPage.classList.add("hide");
+        setTimeout(() => oldPage.remove(), 750);
     }
 
     buildMap() {
@@ -53,11 +61,15 @@ export default class Mappage {
 
         redPins.forEach((pin) => {
             pin.addEventListener("click", () => {
-                this.PubSub.publish("pageChange", "gamepage");
-                this.PubSub.publish("difficultySubmit", pin.id);
+                this.PubSub.publish("event", [
+                    { type: "difficultySubmit", data: pin.id },
+                    { type: "pageChange", data: "game" },
+                ]);
             });
             pin.addEventListener("mouseenter", () => {
-                this.PubSub.publish("pageChange", { difficulty: pin.id });
+                this.PubSub.publish("event", [
+                    { type: "changeMessage", data: pin.id },
+                ]);
             });
         });
 
@@ -79,13 +91,10 @@ export default class Mappage {
     loadNote(data) {
         const oldNote = document.querySelector(".noteContainer") || null;
 
-        if (oldNote && oldNote.id === data.difficulty) return;
         if (oldNote) oldNote.remove();
 
-        this.PubSub.publish("dataRequest", { type: "playerName" });
-        const newData = Object.assign(data, this.dataResponse);
         const container = document.querySelector(".map");
-        const note = this.buildNote(newData);
+        const note = this.buildNote(data);
         container.appendChild(note);
     }
 
@@ -108,7 +117,7 @@ export default class Mappage {
             },
         };
         let selectedOptions = {};
-        switch (data.difficulty) {
+        switch (data.stateMessage) {
             case "easy":
                 selectedOptions = noteOptions.note1;
                 break;
@@ -122,7 +131,7 @@ export default class Mappage {
         const note = elem({
             prop: "article",
             className: "noteContainer",
-            id: data.difficulty,
+            id: data.stateMessage,
             children: [
                 elem({
                     prop: "img",
@@ -143,7 +152,7 @@ export default class Mappage {
                         }),
                         elem({
                             prop: "p",
-                            textContent: `Admiral ${data.name},`,
+                            textContent: `Admiral ${this.nameRef},`,
                         }),
                         elem({
                             prop: "p",

@@ -2,25 +2,21 @@ import elem from "./elem.js";
 import "../../CSS/namepage.css";
 
 export default class Namepage {
-    constructor(PubSub) {
-        this.PubSub = PubSub;
-        this.PubSub.subscribe("pageChange", this.handlePageChange.bind(this));
-    }
-    handlePageChange(data) {
-        if (data === "loadNamepage") this.loadInputField();
-        if (data === "mappage") this.removeHomepage();
+    constructor(pubsub) {
+        this.PubSub = pubsub;
+        this.container = document.querySelector(".newGameContainer");
+        this.element = this.buildForm();
     }
 
-    loadInputField() {
-        const container = document.querySelector(".newGameContainer");
-        const element = this.buildForm();
-        container.appendChild(element);
+    updateView() {
+        this.removeNewGameBtn();
+        this.container.appendChild(this.element);
     }
 
-    removeHomepage() {
-        const oldPage = document.querySelector(".homepageContainer");
-        oldPage.classList.add("hide");
-        setTimeout(() => oldPage.remove(), 750);
+    // clear container for the form
+    removeNewGameBtn() {
+        const oldElement = document.querySelector(".newGame");
+        if (oldElement) oldElement.remove();
     }
 
     buildForm() {
@@ -41,8 +37,10 @@ export default class Namepage {
             children: [inputField, button],
         });
         button.addEventListener("click", () => {
-            this.PubSub.publish("formSubmit", inputField.value);
-            this.PubSub.publish("pageChange", "mappage");
+            this.PubSub.publish("event", [
+                { type: "formSubmit", data: inputField.value },
+                { type: "pageChange", data: "mapPage" },
+            ]);
         });
         const formContainer = elem({
             prop: "div",

@@ -1,9 +1,9 @@
 import elem from "./elem.js";
-import Ship from "./Ship";
+import Ship from "./shipDOM";
 
 export default class ShipQueue {
-    constructor(board, shipData) {
-        this.board = board;
+    constructor(shipData) {
+        // accepts player's shipQueue array of ships
         this.ships = this.buildShips(shipData);
         this.activeShip = null;
 

@@ -1,9 +1,21 @@
 import Player from "./player.js";
 
 class AI extends Player {
-    constructor(difficulty) {
+    constructor() {
         super("AI");
         this.difficulty = null;
+    }
+
+    setDifficulty(difficulty) {
+        this.difficulty = difficulty;
+    }
+
+    getState() {
+        return {
+            difficulty: this.difficulty,
+            turn: false,
+            gameboard: this.gameboard.getState(),
+        };
     }
 
     AIMove(player1) {

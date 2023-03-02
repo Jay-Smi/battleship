@@ -1,31 +1,48 @@
 export default class PubSub {
     constructor() {
-        this.subscribers = {
-            pageChange: [],
-            formSubmit: [],
-            difficultySubmit: [],
-            dataRequest: [],
-            dataResponse: [],
-            shipPlaced: [],
-            gameStart: [],
-            gameOver: [],
-            playerTurn: [],
-            playerShot: [],
-            shipSunk: [],
-        };
+        //subs stored in array per event
+        //gamedata listens for "event"
+        //view listens for modelChanged
+        this.subscribers = {};
     }
 
-    subscribe(eventType, callback) {
-        this.subscribers[eventType].push(callback);
+    //adds a class' callback to the event array
+    subscribe(event, callback) {
+        if (!this.subscribers[event]) {
+            this.subscribers[event] = [];
+        }
+
+        this.subscribers[event].push(callback);
     }
 
-    unsubscribe(eventType, callback) {
-        this.subscribers[eventType] = this.subscribers[eventType].filter(
-            (subscriber) => subscriber !== callback
-        );
+    //removes callback from event array
+    unsubscribe(event, callback) {
+        if (this.subscribers[event]) {
+            const index = this.subscribers[event].indexOf(callback);
+            if (index !== -1) {
+                this.subscribers[event].splice(index, 1);
+            }
+        }
     }
 
-    publish(eventType, data) {
-        this.subscribers[eventType].forEach((subscriber) => subscriber(data));
+    //announces to every callback that's subscribed to the event
+    //passes callback data
+    publish(event, data) {
+        if (this.subscribers[event]) {
+            this.subscribers[event].forEach((callback) => {
+                callback(data);
+            });
+        }
     }
 }
+//pageChange: [],
+//formSubmit: [],
+//difficultySubmit: [],
+//dataRequest: [],
+//dataResponse: [],
+//shipPlaced: [],
+//gameStart: [],
+//gameOver: [],
+//playerTurn: [],
+//playerShot: [],
+//shipSunk: [],

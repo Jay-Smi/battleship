@@ -1,28 +1,20 @@
 import elem from "./elem.js";
 import "../../CSS/homepage.css";
 
-export default class Homepage {
-    constructor(PubSub) {
-        this.PubSub = PubSub;
-        this.PubSub.subscribe("pageChange", this.handlePageChange.bind(this));
+export default class HomePage {
+    constructor(pubsub, container) {
+        this.PubSub = pubsub;
+
+        this.container = container;
+
+        this.element = this.homePage();
     }
 
-    handlePageChange(data) {
-        if (data === "loadHomepage") this.loadHomepage(data);
-        if (data === "loadNamepage") this.removeNewGameBtn();
-        // this.PubSub.unsubscribe("pageChange", this.handlePageChange);
-    }
+    // empty the container, the load the homepage
+    updateView() {
+        this.clearContainer(this.container);
 
-    loadHomepage() {
-        const element = this.homePage();
-        const container = document.querySelector("#container");
-        this.clearContainer(container);
-        container.appendChild(element);
-    }
-
-    removeNewGameBtn() {
-        const oldElement = document.querySelector(".newGame");
-        oldElement.remove();
+        this.container.appendChild(this.element);
     }
 
     clearContainer(container) {
@@ -90,7 +82,12 @@ export default class Homepage {
         );
 
         newGame.firstChild.addEventListener("click", () => {
-            this.PubSub.publish("pageChange", "loadNamepage");
+            this.PubSub.publish("event", [
+                {
+                    type: "pageChange",
+                    data: "namePage",
+                },
+            ]);
         });
 
         return homepageContainer;

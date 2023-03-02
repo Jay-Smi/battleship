@@ -1,20 +1,22 @@
 import "../../CSS/stagingscreen.css";
-import elem from "./elem.js";
+import elem from "./elem";
 import wavesSrc from "../../assets/videos/ocean.mp4";
 
-export default class Gamepage {
-    constructor(PubSub) {
+export default class GameUI {
+    constructor(PubSub, container) {
         this.PubSub = PubSub;
-        this.PubSub.subscribe("pageChange", this.handlePageChange.bind(this));
+        this.container = container;
+        this.gameContainer = this.buildGamepage();
+
+        this.clearContainer(this.container);
+
+        this.container.appendChild(this.gameContainer);
     }
-    handlePageChange(data) {
-        if (data === "gamepage") this.loadGamePage();
-    }
-    loadGamePage() {
-        const container = document.querySelector("#container");
-        const element = this.buildGamepage();
-        container.appendChild(element);
-        this.PubSub.publish("pageChange", "gamestaging");
+
+    clearContainer(container) {
+        while (container.firstChild) {
+            container.firstChild.remove();
+        }
     }
 
     buildGamepage() {
@@ -33,6 +35,10 @@ export default class Gamepage {
             prop: "button",
             id: "activate",
             children: [elem({ prop: "span" })],
+        });
+
+        leftButton.addEventListener("click", () => {
+            this.PubSub.publish("event", [{ type: "rotateShip" }]);
         });
 
         const gameContainer = elem({

@@ -1,15 +1,15 @@
 import elem from "./elem.js";
 
 export default class Board {
-    constructor(size, PubSub) {
+    constructor(board, PubSub, playerShipQueue) {
         this.PubSub = PubSub;
 
-        this.size = size;
+        this.playerBoard = board;
         this.element = this.createElement();
         this.cells = this.createCells();
         this.ships = [];
         this.board = [];
-        this.shipQueue = null;
+        this.shipQueue = playerShipQueue;
         this.element.addEventListener(
             "dragover",
             this.handleDragOver.bind(this)
@@ -18,6 +18,10 @@ export default class Board {
             "dragleave",
             this.handleDragLeave.bind(this)
         );
+
+        this.container = document.querySelector(".p1GridContainer");
+
+        this.container.appendChild(this.element);
     }
 
     updateQueue(shipQueue) {
@@ -34,8 +38,8 @@ export default class Board {
     createCells() {
         const cells = [];
 
-        for (let row = 0; row < this.size; row++) {
-            for (let col = 0; col < this.size; col++) {
+        for (let row = 0; row < this.playerBoard.size; row++) {
+            for (let col = 0; col < this.playerBoard.size; col++) {
                 const cell = elem({ prop: "div", className: "cell" });
 
                 cell.dataset.row = row;
@@ -111,7 +115,10 @@ export default class Board {
         for (let i = 0; i < ship.size; i++) {
             const cell = this.getCell(row, col);
             if (cell) {
-                if (cell.classList.contains("ship")) {
+                if (
+                    this.playerBoard[row][col].ship ||
+                    cell.classList.contains("ship")
+                ) {
                     return false;
                 }
                 if (ship.isHorizontal === true) {
