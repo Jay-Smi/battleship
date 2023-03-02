@@ -22,10 +22,9 @@ class Gameboard {
             tempBoard[row] = [];
             for (let col = 0; col < this.size; col++) {
                 tempBoard[row][col] = new Tile(row, col);
-
-                return tempBoard;
             }
         }
+        return tempBoard;
     }
 
     //must edit to accept orientation from event rather that class be stated

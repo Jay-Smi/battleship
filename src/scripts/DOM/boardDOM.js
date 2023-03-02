@@ -8,7 +8,7 @@ export default class Board {
         this.element = this.createElement();
         this.cells = this.createCells();
         this.ships = [];
-        this.board = [];
+
         this.shipQueue = playerShipQueue;
         this.element.addEventListener(
             "dragover",
@@ -20,7 +20,6 @@ export default class Board {
         );
 
         this.container = document.querySelector(".p1GridContainer");
-
         this.container.appendChild(this.element);
     }
 
@@ -62,10 +61,15 @@ export default class Board {
     }
 
     getCell(row, col) {
-        if (row < 0 || row >= this.size || col < 0 || col >= this.size) {
+        if (
+            row < 0 ||
+            row >= this.playerBoard.size ||
+            col < 0 ||
+            col >= this.playerBoard.size
+        ) {
             return null;
         }
-        return this.cells[row * this.size + col];
+        return this.cells[row * this.playerBoard.size + col];
     }
 
     getCells(size, row, col, isHorizontal) {
@@ -116,8 +120,8 @@ export default class Board {
             const cell = this.getCell(row, col);
             if (cell) {
                 if (
-                    this.playerBoard[row][col].ship ||
-                    cell.classList.contains("ship")
+                    cell.classList.contains("ship") ||
+                    this.playerBoard.board[row][col].ship
                 ) {
                     return false;
                 }
@@ -135,7 +139,11 @@ export default class Board {
 
     placeShip(ship, row, col) {
         const cells = this.getCells(ship.size, row, col, ship.isHorizontal);
-        if (cells.every(({ row, col }) => this.board[row][col] === EMPTY)) {
+        if (
+            cells.every(
+                ({ row, col }) => this.playerBoard.board[row][col] === EMPTY
+            )
+        ) {
             // all cells are empty, so place the ship
             cells.forEach(({ row, col }) => {
                 this.grid[row][col] = ship.id;
@@ -186,7 +194,10 @@ export default class Board {
         let rowOffset = baseRow;
         let colOffset = baseCol;
         for (let i = 0; i < length; i++) {
-            if (rowOffset >= this.boardSize || colOffset >= this.boardSize) {
+            if (
+                rowOffset >= this.playerBoard.size ||
+                colOffset >= this.playerBoard.size
+            ) {
                 isValid = false;
                 break;
             }
@@ -244,6 +255,7 @@ export default class Board {
                 baseRow,
                 baseCol,
             });
+            console.log("OMG DROPPPPPP");
         }
     }
 }
