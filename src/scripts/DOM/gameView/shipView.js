@@ -1,16 +1,16 @@
-import elem from "./elem.js";
+import elem from "../elem.js";
 
-import carrierSrc from "../../assets/images/Carrier.svg";
-import battleshipSrc from "../../assets/images/Battleship.svg";
-import destroyerSrc from "../../assets/images/Destroyer.svg";
-import submarineSrc from "../../assets/images/Submarine.svg";
-import patrolBoatSrc from "../../assets/images/Patrol-Boat.svg";
+import carrierSrc from "../../../assets/images/Carrier.svg";
+import battleshipSrc from "../../../assets/images/Battleship.svg";
+import destroyerSrc from "../../../assets/images/Destroyer.svg";
+import submarineSrc from "../../../assets/images/Submarine.svg";
+import patrolBoatSrc from "../../../assets/images/Patrol-Boat.svg";
 
 export default class Ship {
-    constructor(id, size) {
+    constructor(id, size, isHorizontal) {
         this.id = id;
         this.size = size;
-        this.isHorizontal = false;
+        this.isHorizontal = isHorizontal;
 
         // contains child divs for clicked index reference
         this.tiles = [];
@@ -20,8 +20,6 @@ export default class Ship {
 
         this.element = this.create();
 
-        // scales the ship to more closely match the size of the board's grids
-        // for 0ms before reverting to original size
         this.element.addEventListener(
             "dragstart",
             this.handleDragStart.bind(this)
@@ -35,6 +33,11 @@ export default class Ship {
         ship.classList.add("ship");
         ship.draggable = true;
         let shipSrc = null;
+        let shipClass;
+        this.isHorizontal
+            ? (shipClass = "horizontal")
+            : (shipClass = "vertical");
+        ship.classList.add(shipClass);
 
         // matches name of ship to the image source file
         switch (this.id) {

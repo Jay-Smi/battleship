@@ -36,6 +36,7 @@ export default class Game {
     //adds all events to eventQueue
     handleEvents(events) {
         this.eventQueue.push(...events);
+
         this.executeEvents();
     }
 
@@ -56,7 +57,13 @@ export default class Game {
                 case "difficultySubmit":
                     this.AI.setDifficulty(event.data);
                     break;
-
+                case "rotateShip":
+                    this.player.rotateShip(event.data);
+                    break;
+                case "shipPlaced":
+                    const { ship, row, col } = event.data;
+                    this.player.placeShip(row, col);
+                    break;
                 default:
                     console.warn(`Unrecognized event type: ${event}`);
                     break;

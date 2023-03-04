@@ -16,12 +16,31 @@ class Player {
         ];
     }
 
+    rotateShip(data) {
+        this.shipQueue.forEach((ship) => {
+            if (ship.name === data.id) {
+                ship.rotate();
+            }
+        });
+    }
+
+    placeShip(row, col) {
+        this.gameboard.placeShip(this.shipQueue[0], row, col);
+        this.gameboard.ships.push(this.shipQueue.shift());
+    }
+
+    getShipsState() {
+        const newShipState = [];
+        this.shipQueue.forEach((ship) => newShipState.push(ship.getState()));
+        return newShipState;
+    }
+
     getState() {
         return {
             name: this.name,
             turn: false,
             gameboard: this.gameboard.getState(),
-            shipQueue: this.shipQueue,
+            shipQueue: this.getShipsState(),
         };
     }
 

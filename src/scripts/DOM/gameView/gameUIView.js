@@ -1,6 +1,6 @@
-import "../../CSS/stagingscreen.css";
-import elem from "./elem";
-import wavesSrc from "../../assets/videos/ocean.mp4";
+import "../../../CSS/stagingscreen.css";
+import elem from "../elem";
+import wavesSrc from "../../../assets/videos/ocean.mp4";
 
 export default class GameUI {
     constructor(PubSub, container) {
@@ -35,10 +35,6 @@ export default class GameUI {
             prop: "button",
             id: "activate",
             children: [elem({ prop: "span" })],
-        });
-
-        leftButton.addEventListener("click", () => {
-            this.PubSub.publish("event", [{ type: "rotateShip" }]);
         });
 
         const gameContainer = elem({

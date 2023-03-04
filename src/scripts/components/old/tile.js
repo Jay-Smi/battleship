@@ -7,6 +7,17 @@ class Tile {
         this.ship = null;
         this.shot = null;
         this.element = null;
+        this.tileStatus = null;
+    }
+
+    getState() {
+        return {
+            row: this.row,
+            col: this.col,
+            ship: this.ship,
+            shot: this.shot,
+            tileStatus: this.tileStatus,
+        };
     }
 }
 

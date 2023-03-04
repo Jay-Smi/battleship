@@ -1,4 +1,4 @@
-import elem from "./elem.js";
+import elem from "../elem.js";
 
 export default class Board {
     constructor(board, PubSub, shipQueue) {
@@ -40,6 +40,18 @@ export default class Board {
     //     return element;
     // }
 
+    //will use to display hit / miss / not attacked status, ship display not here
+    // accepts fresh gameboard
+    updateView(gameboard) {}
+
+    isShipCell(cell) {
+        const row = cell.dataset.row;
+        const col = cell.dataset.col;
+        if (this.board[row][col].ship !== null) {
+            return true;
+        }
+    }
+
     createCells() {
         // creates the board DOM elements
         const cells = [];
@@ -71,7 +83,7 @@ export default class Board {
         return cells;
     }
 
-    // returns the DOM element for a given coordinate
+    /**  returns the DOM element for a given coordinate */
     getCell(row, col) {
         if (
             row < 0 ||
@@ -84,7 +96,7 @@ export default class Board {
         return this.cells[row * this.gameboard.size + col];
     }
 
-    // returns the DOM elements for given coordinates and ship
+    /** returns the DOM elements for given coordinates and ship */
     getCells(size, row, col, isHorizontal) {
         const cells = [];
 
@@ -98,14 +110,14 @@ export default class Board {
         return cells;
     }
 
-    // get coordinates based on element's dataset
+    /**  get coordinates based on element's dataset */
     getCellPosition(element) {
         const row = Number(element.dataset.row);
         const col = Number(element.dataset.col);
         return { x: col, y: row };
     }
 
-    // calculates the left most or top most tile
+    /**  calculates the left most or top most tile */
     getBaseTile(ship, row, col) {
         // gets the index that the ship was picked up by
         const index = ship.clickedIndex;
@@ -125,8 +137,8 @@ export default class Board {
         return { row: baseRow, col: baseCol };
     }
 
-    //additional validation by the model before placeship event fulfilled
-    // assumes row, col is the base tile
+    /** additional validation by the model before placeship event fulfilled
+        assumes row, col is the base tile */
     isValidPlacement(ship, row, col) {
         // checks if all hovered tiles are on the board
         if (ship.isHorizontal === true && col + ship.size > this.cols) {
@@ -177,15 +189,6 @@ export default class Board {
             // some cells are already occupied, so don't place the ship
             return false;
         }
-    }
-
-    render() {
-        this.cells.forEach((cell) => {
-            cell.classList.remove("selected");
-            if (this.ships.isShipCell(cell)) {
-                cell.classList.add("selected");
-            }
-        });
     }
 
     handleDragOver(e) {
@@ -279,13 +282,12 @@ export default class Board {
 
         let isValid = this.isValidPlacement(ship, baseRow, baseCol);
         if (isValid) {
-            this.PubSub.publish("shipPlaced", {
-                e,
-                size: ship.size,
-                baseRow,
-                baseCol,
-            });
-            console.log("OMG DROPPPPPP");
+            this.PubSub.publish("event", [
+                {
+                    type: "shipPlaced",
+                    data: { ship: ship, row: baseRow, col: baseCol },
+                },
+            ]);
         }
     }
 }

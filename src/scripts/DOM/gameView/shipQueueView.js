@@ -1,17 +1,22 @@
-import elem from "./elem.js";
-import Ship from "./shipDOM";
+import elem from "../elem.js";
+import Ship from "./shipView";
 
 export default class ShipQueue {
-    constructor(shipData) {
+    constructor(pubsub, shipData) {
+        this.PubSub = pubsub;
+        this.stage = document.querySelector(".shipQueue");
+        this.next = document.querySelector(".nextShipContainer");
+
         // accepts player's shipQueue array of ships
         this.ships = this.buildShips(shipData);
         this.activeShip = null;
 
         this.rotateButton = document.querySelector(".rotateButton");
-        this.rotateButton.addEventListener(
-            "click",
-            this.rotateActiveShip.bind(this)
-        );
+        this.rotateButton.addEventListener("click", () => {
+            this.PubSub.publish("event", [
+                { type: "rotateShip", data: this.activeShip },
+            ]);
+        });
 
         this.ships.forEach((ship) => {
             ship.element.addEventListener("click", () => {});
@@ -21,35 +26,26 @@ export default class ShipQueue {
         this.renderQueue();
     }
 
+    updateQueue(newQueue) {
+        this.ships = this.buildShips(newQueue);
+        this.setActiveShip();
+        this.renderQueue();
+    }
+
     getActiveShip() {
         return this.activeShip;
     }
 
-    setActiveShip(ship) {
-        this.activeShip = ship;
+    setActiveShip() {
+        this.activeShip = this.ships[0];
         this.ships.forEach((s) =>
             s.tiles.forEach((t) => t.classList.remove("selected"))
         );
-        ship.tiles.forEach((tile) => tile.classList.add("selected"));
+        this.activeShip.tiles.forEach((tile) => tile.classList.add("selected"));
     }
 
     rotateActiveShip() {
         this.activeShip.rotate();
-        // this.board.clearHighlightedCells(); maybe add
-        this.highlightActiveShip();
-    }
-
-    highlightActiveShip() {
-        // this.activeShip.tiles.forEach((tile) => {
-        //     const row = parseInt(tile.dataset.row);
-        //     const col = parseInt(tile.dataset.col);
-        //     const isValid = this.board.isValidPlacement(
-        //         this.activeShip,
-        //         row,
-        //         col
-        //     );
-        //     this.board.highlightCell(row, col, isValid ? "green" : "red");
-        // });
     }
 
     getNextShip() {
@@ -64,23 +60,25 @@ export default class ShipQueue {
     buildShips(shipData) {
         const shipList = [];
         shipData.forEach((ship) => {
-            const shipObj = new Ship(ship.name, ship.length);
-            console.log(ship.name);
+            const shipObj = new Ship(ship.name, ship.length, ship.isHorizontal);
             shipList.push(shipObj);
         });
         return shipList;
     }
 
     renderQueue() {
-        const stage = document.querySelector(".shipQueue");
-        const next = document.querySelector(".nextShipContainer");
-
+        if (this.next.children) this.clearContainer(this.next);
+        if (this.stage.children) this.clearContainer(this.stage);
         for (let i = 0; i < this.ships.length; i++) {
             if (i === 0) {
-                next.appendChild(this.ships[i].element);
+                this.next.appendChild(this.ships[i].element);
             } else {
-                stage.prepend(this.ships[i].element);
+                this.stage.prepend(this.ships[i].element);
             }
         }
+    }
+
+    clearContainer(container) {
+        while (container.firstChild) container.firstChild.remove();
     }
 }

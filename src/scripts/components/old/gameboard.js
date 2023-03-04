@@ -11,8 +11,21 @@ class Gameboard {
     getState() {
         return {
             size: this.size,
-            board: this.board,
+            board: this.getTileState(),
+            ships: this.ships,
         };
+    }
+
+    getTileState() {
+        const tempBoard = [];
+
+        for (let row = 0; row < this.size; row++) {
+            tempBoard[row] = [];
+            for (let col = 0; col < this.size; col++) {
+                tempBoard[row][col] = this.board[row][col].getState();
+            }
+        }
+        return tempBoard;
     }
 
     buildBoard() {
@@ -27,69 +40,49 @@ class Gameboard {
         return tempBoard;
     }
 
-    //must edit to accept orientation from event rather that class be stated
-    placeShip(x, y, ship) {
-        if (this.isValidPlacement(x, y, ship.length)) {
+    placeShip(ship, row, col) {
+        if (this.isValidPlacement(ship, row, col)) {
             if (ship.isHorizontal) {
                 for (let i = 0; i < ship.length; i++) {
-                    this.board[x][y - i].ship = ship;
+                    this.board[row][col + i].ship = ship;
+                    this.board[row][col + i].tileStatus = "S";
                 }
             } else {
                 for (let i = 0; i < ship.length; i++) {
-                    this.board[x + i][y].ship = ship;
+                    this.board[row + i][col].ship = ship;
+                    this.board[row + i][col].tileStatus = "S";
                 }
             }
         } else {
             //do something if invalid placement
-            console.log("Invalid Ship Placement");
+            console.warn(
+                "Invalid Ship Placement: Handle this already, Gameboard.js"
+            );
             return;
         }
     }
 
-    isValidPlacement(x, y, length) {
-        let coordArr = [[x, y]];
-
-        if (this.orientation) {
-            if (
-                //checks vertical placement is on the board
-                x >= 0 &&
-                x < this.board.length &&
-                y >= 0 &&
-                y < this.board.length &&
-                y - length + 1 >= 0 &&
-                y - length + 1 < this.board.length
-            ) {
-                for (let i = 1; i < length; i++) {
-                    coordArr.push([x, y - i]);
-                }
-                coordArr.forEach((z) => {
-                    if (this.board[z[0]][z[1]] !== null) return false;
-                });
-                return true;
-            } else {
+    isValidPlacement(ship, row, col) {
+        // checks if all hovered tiles are on the board
+        if (ship.isHorizontal === true && col + ship.size > this.cols) {
+            return false;
+        }
+        if (ship.isHorizontal === false && row + ship.size > this.rows) {
+            return false;
+        }
+        // iterates over every tile
+        // and checks if the gameboard contains a ship
+        for (let i = 0; i < ship.size; i++) {
+            if (this.board[row][col].ship) {
                 return false;
             }
-        } else {
-            if (
-                //checks horizontal placement is on the board
-                x >= 0 &&
-                x < this.board.length &&
-                y >= 0 &&
-                y < this.board.length &&
-                x + length - 1 >= 0 &&
-                x + length - 1 < this.board.length
-            ) {
-                for (let i = 1; i < length; i++) {
-                    coordArr.push([x + i, y]);
-                }
-                coordArr.forEach((z) => {
-                    if (this.board[z[0]][z[1]] !== null) return false;
-                });
-                return true;
+            if (ship.isHorizontal === true) {
+                col++;
             } else {
-                return false;
+                row++;
             }
         }
+        return true;
     }
 
     receiveAttack(x, y) {
