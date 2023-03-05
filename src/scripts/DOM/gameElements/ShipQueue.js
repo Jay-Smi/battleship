@@ -1,22 +1,32 @@
 import elem from "../elem.js";
-import Ship from "./shipView";
+// import Ship from "./shipView";
 
-export default class ShipQueue {
-    constructor(pubsub, shipData) {
-        this.PubSub = pubsub;
-        this.stage = document.querySelector(".shipQueue");
-        this.next = document.querySelector(".nextShipContainer");
+// import { rotateShip } from "../../components/game.js";
+import PubSubInterface from "../../PubSubInterface.js";
+
+export default class ShipQueue extends PubSubInterface {
+    constructor(viewModel, container) {
+        super(viewModel);
+
+        this.container = container;
+
+        this.stage = elem({
+            prop: "div",
+            className: "shipQueue",
+            draggable: false,
+        });
+        this.next = elem({
+            prop: "div",
+            className: "nextShipContainer",
+            draggable: false,
+        });
 
         // accepts player's shipQueue array of ships
-        this.ships = this.buildShips(shipData);
+        this.ships = null;
         this.activeShip = null;
 
         this.rotateButton = document.querySelector(".rotateButton");
-        this.rotateButton.addEventListener("click", () => {
-            this.PubSub.publish("event", [
-                { type: "rotateShip", data: this.activeShip },
-            ]);
-        });
+        this.rotateButton.addEventListener("click", this.rotateShip);
 
         this.ships.forEach((ship) => {
             ship.element.addEventListener("click", () => {});
@@ -24,6 +34,22 @@ export default class ShipQueue {
 
         this.setActiveShip(this.ships[0]);
         this.renderQueue();
+
+        this.onInit();
+    }
+
+    onInit() {
+        super.onInit;
+    }
+
+    shouldUpdate(oldModel, newModel) {
+        return false;
+    }
+
+    render(model) {}
+
+    rotateShip() {
+        this.viewModel.updateModel(() => {});
     }
 
     updateQueue(newQueue) {

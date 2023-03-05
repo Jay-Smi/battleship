@@ -1,16 +1,54 @@
 import "../../../CSS/stagingscreen.css";
 import elem from "../elem";
 import wavesSrc from "../../../assets/videos/ocean.mp4";
+import PubSubInterface from "../../PubSubInterface.js";
 
-export default class GameUI {
-    constructor(PubSub, container) {
-        this.PubSub = PubSub;
-        this.container = container;
-        this.gameContainer = this.buildGamepage();
+export default class GameUI extends PubSubInterface {
+    constructor(viewModel) {
+        super(viewModel);
 
-        this.clearContainer(this.container);
+        this.container = document.querySelector("#container");
+        this.gameContainer = null;
 
-        this.container.appendChild(this.gameContainer);
+        this.shipContainer = null;
+
+        this.messageContainer = null;
+
+        this.leftButton = null;
+        this.middleButton = null;
+        this.rightButton = null;
+
+        this.onInit();
+    }
+
+    onInit() {
+        super.onInit();
+    }
+
+    shouldUpdate(oldModel, newModel) {
+        return (
+            // changed to game page
+            (newModel.currentPage === "gamePage" &&
+                oldModel.currentPage !== "gamePage") ||
+            // changed off game page
+            (oldModel.currentPage === "gamePage" &&
+                newModel.currentPage !== "gamePage") ||
+            // note changed
+            (oldModel.stateMessage !== newModel.stateMessage &&
+                newModel.currentPage === "gamePage" &&
+                oldModel.currentPage === "gamePage")
+        );
+    }
+
+    render(model) {
+        if (
+            model.currentPage === "gamePage" &&
+            model.gameState === "placeShips"
+        ) {
+            if (this.gameContainer) this.gameContainer.remove();
+            this.gameContainer = this.buildGamepage();
+            this.container.appendChild(this.gameContainer);
+        }
     }
 
     clearContainer(container) {
@@ -20,21 +58,31 @@ export default class GameUI {
     }
 
     buildGamepage() {
-        const leftButton = elem({
+        this.leftButton = elem({
             prop: "button",
             id: "activate",
             className: "rotateButton",
             children: [elem({ prop: "span" })],
         });
-        const middleButton = elem({
+        this.middleButton = elem({
             prop: "button",
             id: "activate",
             children: [elem({ prop: "span" })],
         });
-        const rightButton = elem({
+        this.rightButton = elem({
             prop: "button",
             id: "activate",
             children: [elem({ prop: "span" })],
+        });
+
+        this.shipContainer = elem({
+            prop: "div",
+            className: "shipContainer",
+        });
+
+        this.messageContainer = elem({
+            prop: "div",
+            className: "shipFooter",
         });
 
         const gameContainer = elem({
@@ -143,33 +191,8 @@ export default class GameUI {
                             className: "p1ShipStage",
                             draggable: false,
                             children: [
-                                elem({
-                                    prop: "div",
-                                    className: "shipContainer",
-                                    children: [
-                                        elem({
-                                            prop: "div",
-                                            className: "shipQueue",
-                                            draggable: false,
-                                        }),
-                                        elem({
-                                            prop: "div",
-                                            className: "nextShipContainer",
-                                            draggable: false,
-                                        }),
-                                    ],
-                                }),
-                                elem({
-                                    prop: "div",
-                                    className: "shipFooter",
-                                    children: [
-                                        elem({
-                                            prop: "p",
-                                            className: "stagePara",
-                                            textContent: `Enemies approach. Deploy the fleet.`,
-                                        }),
-                                    ],
-                                }),
+                                this.shipContainer,
+                                this.messageContainer,
                             ],
                         }),
                         elem({
@@ -183,7 +206,7 @@ export default class GameUI {
                                         elem({
                                             prop: "div",
                                             className: "base",
-                                            children: [leftButton],
+                                            children: [this.leftButton],
                                         }),
                                         elem({
                                             prop: "div",
@@ -199,7 +222,7 @@ export default class GameUI {
                                         elem({
                                             prop: "div",
                                             className: "base",
-                                            children: [middleButton],
+                                            children: [this.middleButton],
                                         }),
                                         elem({
                                             prop: "div",
@@ -215,7 +238,7 @@ export default class GameUI {
                                         elem({
                                             prop: "div",
                                             className: "base",
-                                            children: [rightButton],
+                                            children: [this.rightButton],
                                         }),
                                         elem({
                                             prop: "div",

@@ -2,39 +2,48 @@ import elem from "./elem.js";
 import "../../CSS/mappage.css";
 import redPinSrc from "../../assets/images/red-pin.png";
 import stickyNoteSrc from "../../assets/images/sticky-note.svg";
+import PubSubInterface from "../PubSubInterface.js";
 
-export default class MapPage {
-    constructor(PubSub, container, newState) {
-        this.PubSub = PubSub;
+export default class MapPage extends PubSubInterface {
+    constructor(viewModel) {
+        super(viewModel);
 
-        //save state to grab player name
-        this.state = newState;
+        this.container = document.querySelector("#container");
 
-        //save player name
-        this.nameRef = newState.player.name;
+        this.element = null;
 
-        this.container = container;
-
-        this.element = this.buildMap(newState);
+        this.onInit();
     }
 
-    updateView(changed) {
-        // if changing to the map page
-        if (changed.currentPage) {
-            this.removeHomepage();
+    onInit() {
+        super.onInit();
+        this.element = this.buildMap();
+    }
+
+    shouldUpdate(oldModel, newModel) {
+        return (
+            // changed to map page
+            (newModel.currentPage === "mapPage" &&
+                oldModel.currentPage !== "mapPage") ||
+            // changed off map page
+            (oldModel.currentPage === "mapPage" &&
+                newModel.currentPage !== "mapPage") ||
+            // note changed
+            oldModel.stateMessage !== newModel.stateMessage
+        );
+    }
+
+    render(model) {
+        if (model.currentPage === "mapPage" && !model.stateMessage) {
             this.container.appendChild(this.element);
         }
-        // if pin hovered
-        if (changed.stateMessage) {
-            this.loadNote(changed);
+        if (model.currentPage === "mapPage" && model.stateMessage) {
+            this.loadNote(model);
         }
-    }
-
-    // clear the container, add timeout for transition
-    removeHomepage() {
-        const oldPage = document.querySelector(".homepageContainer");
-        oldPage.classList.add("hide");
-        setTimeout(() => oldPage.remove(), 750);
+        if (model.currentPage === "gamePage") {
+            this.element.classList.add("hide");
+            setTimeout(() => this.element.remove(), 750);
+        }
     }
 
     buildMap() {
@@ -61,15 +70,21 @@ export default class MapPage {
 
         redPins.forEach((pin) => {
             pin.addEventListener("click", () => {
-                this.PubSub.publish("event", [
-                    { type: "difficultySubmit", data: pin.id },
-                    { type: "pageChange", data: "game" },
-                ]);
+                this.viewModel.updateModel((oldModel) => {
+                    const newModel = { ...oldModel };
+                    newModel.currentPage = "gamePage";
+                    newModel.gameState = "placeShips";
+                    newModel.stateMessage = "";
+                    newModel.AI.difficulty = pin.id;
+                    return newModel;
+                });
             });
             pin.addEventListener("mouseenter", () => {
-                this.PubSub.publish("event", [
-                    { type: "changeMessage", data: pin.id },
-                ]);
+                this.viewModel.updateModel((oldModel) => {
+                    const newModel = { ...oldModel };
+                    newModel.stateMessage = pin.id;
+                    return newModel;
+                });
             });
         });
 
@@ -88,17 +103,17 @@ export default class MapPage {
         setTimeout(() => map.remove(), 750);
     }
 
-    loadNote(data) {
+    loadNote(viewModel) {
         const oldNote = document.querySelector(".noteContainer") || null;
 
         if (oldNote) oldNote.remove();
 
         const container = document.querySelector(".map");
-        const note = this.buildNote(data);
+        const note = this.buildNote(viewModel);
         container.appendChild(note);
     }
 
-    buildNote(data) {
+    buildNote(viewModel) {
         const noteOptions = {
             note1: {
                 location: "Somalian Coast",
@@ -117,7 +132,7 @@ export default class MapPage {
             },
         };
         let selectedOptions = {};
-        switch (data.stateMessage) {
+        switch (viewModel.stateMessage) {
             case "easy":
                 selectedOptions = noteOptions.note1;
                 break;
@@ -131,7 +146,7 @@ export default class MapPage {
         const note = elem({
             prop: "article",
             className: "noteContainer",
-            id: data.stateMessage,
+            id: viewModel.stateMessage,
             children: [
                 elem({
                     prop: "img",
@@ -152,7 +167,7 @@ export default class MapPage {
                         }),
                         elem({
                             prop: "p",
-                            textContent: `Admiral ${this.nameRef},`,
+                            textContent: `Admiral ${viewModel.player.name},`,
                         }),
                         elem({
                             prop: "p",
