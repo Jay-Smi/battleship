@@ -1,51 +1,14 @@
 import PubSubInterface from "../PubSubInterface.js";
 import elem from "./elem.js";
 import "../../CSS/homepage.css";
+import NamePage from "./NamePage.js";
 
 export default class HomePage extends PubSubInterface {
-    constructor(viewModel) {
-        super(viewModel);
-
-        this.container = container;
-
-        this.element = this.homePage();
-
-        super.onInit();
-        this.render(this.viewModel);
+    constructor(viewModel, element) {
+        super(viewModel, element);
     }
 
-    shouldUpdate(oldModel, newModel) {
-        return (
-            // if swapped to homePage from another page
-            (newModel.currentPage === "homePage" &&
-                oldModel.currentPage !== "homePage") ||
-            // if changed off of homePage
-            (oldModel.currentPage === "homePage" &&
-                newModel.currentPage !== "homePage")
-        );
-    }
-
-    render({ currentPage }) {
-        // if swapped to homePage from another page
-        if (currentPage === "homePage") {
-            this.clearContainer(this.container);
-
-            this.container.appendChild(this.element);
-        }
-        // if changed off of homePage
-        if (currentPage === "namePage") {
-            const oldElement = document.querySelector(".newGame");
-            if (oldElement) oldElement.remove();
-        }
-    }
-
-    clearContainer(container) {
-        while (container.firstChild) {
-            container.firstChild.remove();
-        }
-    }
-
-    homePage() {
+    render(model) {
         const homepageContainer = elem({
             prop: "div",
             className: "homepageContainer",
@@ -58,17 +21,15 @@ export default class HomePage extends PubSubInterface {
                 className: "homeHeader",
             })
         );
+
+
+
         const newGame = elem({
             prop: "main",
-            className: "newGameContainer",
-            children: [
-                elem({
-                    prop: "div",
-                    textContent: "New Game",
-                    className: "newGame",
-                }),
-            ],
+            className: "newGameContainer"
         });
+
+        new NamePage(this.viewModel, newGame);
 
         homepageContainer.appendChild(newGame);
         homepageContainer.appendChild(
@@ -103,14 +64,7 @@ export default class HomePage extends PubSubInterface {
             })
         );
 
-        newGame.firstChild.addEventListener("click", () => {
-            this.viewModel.updateModel((oldModel) => {
-                const newModel = { ...oldModel };
-                newModel.currentPage = "namePage";
-                return newModel;
-            });
-        });
-
         return homepageContainer;
     }
+
 }

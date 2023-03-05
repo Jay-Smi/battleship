@@ -1,6 +1,8 @@
 export default class PubSubInterface {
-    constructor(viewModel) {
+    constructor(viewModel, element) {
         this.viewModel = viewModel;
+        this.element = element;
+        this.onInit();
     }
 
     onInit() {
@@ -9,5 +11,9 @@ export default class PubSubInterface {
 
     shouldUpdate(oldModel, newModel) {
         return true;
+    }
+
+    getElement() {
+        return this.element;
     }
 }

@@ -5,48 +5,13 @@ import stickyNoteSrc from "../../assets/images/sticky-note.svg";
 import PubSubInterface from "../PubSubInterface.js";
 
 export default class MapPage extends PubSubInterface {
-    constructor(viewModel) {
-        super(viewModel);
-
-        this.container = document.querySelector("#container");
-
-        this.element = null;
-
-        this.onInit();
+    constructor(viewModel, element) {
+        super(viewModel, element);
     }
 
-    onInit() {
-        super.onInit();
-        this.element = this.buildMap();
-    }
 
-    shouldUpdate(oldModel, newModel) {
-        return (
-            // changed to map page
-            (newModel.currentPage === "mapPage" &&
-                oldModel.currentPage !== "mapPage") ||
-            // changed off map page
-            (oldModel.currentPage === "mapPage" &&
-                newModel.currentPage !== "mapPage") ||
-            // note changed
-            oldModel.stateMessage !== newModel.stateMessage
-        );
-    }
+    render({stateMessage, player}) {
 
-    render(model) {
-        if (model.currentPage === "mapPage" && !model.stateMessage) {
-            this.container.appendChild(this.element);
-        }
-        if (model.currentPage === "mapPage" && model.stateMessage) {
-            this.loadNote(model);
-        }
-        if (model.currentPage === "gamePage") {
-            this.element.classList.add("hide");
-            setTimeout(() => this.element.remove(), 750);
-        }
-    }
-
-    buildMap() {
         const redPins = [
             elem({
                 prop: "img",
@@ -79,13 +44,13 @@ export default class MapPage extends PubSubInterface {
                     return newModel;
                 });
             });
-            pin.addEventListener("mouseenter", () => {
-                this.viewModel.updateModel((oldModel) => {
-                    const newModel = { ...oldModel };
-                    newModel.stateMessage = pin.id;
-                    return newModel;
+            if(stateMessage !== pin.id) {
+                pin.addEventListener("mouseenter", () => {
+                    this.viewModel.updateModel((oldModel) => {
+                        return {stateMessage: pin.id};
+                    });
                 });
-            });
+            }
         });
 
         const map = elem({
@@ -94,26 +59,15 @@ export default class MapPage extends PubSubInterface {
             children: redPins,
         });
 
+        if(stateMessage) {
+            const note = this.buildNote(stateMessage, player);
+            map.appendChild(note);
+        }
+
         return map;
     }
 
-    removeMap() {
-        const map = document.querySelector(".map");
-        map.classList.add("hide");
-        setTimeout(() => map.remove(), 750);
-    }
-
-    loadNote(viewModel) {
-        const oldNote = document.querySelector(".noteContainer") || null;
-
-        if (oldNote) oldNote.remove();
-
-        const container = document.querySelector(".map");
-        const note = this.buildNote(viewModel);
-        container.appendChild(note);
-    }
-
-    buildNote(viewModel) {
+    buildNote(stateMessage, player) {
         const noteOptions = {
             note1: {
                 location: "Somalian Coast",
@@ -132,7 +86,7 @@ export default class MapPage extends PubSubInterface {
             },
         };
         let selectedOptions = {};
-        switch (viewModel.stateMessage) {
+        switch (stateMessage) {
             case "easy":
                 selectedOptions = noteOptions.note1;
                 break;
@@ -146,7 +100,7 @@ export default class MapPage extends PubSubInterface {
         const note = elem({
             prop: "article",
             className: "noteContainer",
-            id: viewModel.stateMessage,
+            id: stateMessage,
             children: [
                 elem({
                     prop: "img",
@@ -167,7 +121,7 @@ export default class MapPage extends PubSubInterface {
                         }),
                         elem({
                             prop: "p",
-                            textContent: `Admiral ${viewModel.player.name},`,
+                            textContent: `Admiral ${player.name},`,
                         }),
                         elem({
                             prop: "p",

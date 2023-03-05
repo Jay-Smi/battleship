@@ -1,67 +1,217 @@
-import GameUI from "./gameElements/GameUI.js";
 // import Board from "./boardView.js";
 import ShipQueue from "./gameElements/ShipQueue.js";
 import PubSubInterface from "../PubSubInterface.js";
+import wavesSrc from "../../assets/videos/ocean.mp4";
 import GameMessage from "./gameElements/GameMessage.js";
+import "../../CSS/stagingscreen.css";
+import elem from "./elem.js";
 
 export default class GamePage extends PubSubInterface {
-    constructor(viewModel) {
-        super(viewModel);
-
-        this.UI = null;
-
-        this.message = null;
-
-        this.shipQueue = null;
-
-        //build and display the player's board
-
-        // this.playerBoard = new Board(viewModel);
-        this.onInit();
+    constructor(viewModel, element) {
+        super(viewModel, element);
     }
 
-    onInit() {
-        super.onInit();
-    }
-
-    shouldUpdate(oldModel, newModel) {
-        // changed to game page
-        return (
-            newModel.currentPage === "gamePage" &&
-            oldModel.currentPage !== "gamePage" &&
-            newModel.gameState === "placeShips"
-        );
-    }
 
     render(model) {
-        if (!this.UI) {
-            this.UI = new GameUI(this.viewModel);
-        }
-        if (!this.message) {
-            this.message = new GameMessage(
-                this.viewModel,
-                this.UI.messageContainer
-            );
-        }
-        // if (!this.shipQueue) {
-        //     this.shipQueue = new ShipQueue(
-        //         this.viewModel,
-        //         this.UI.shipContainer
-        //     );
-        // }
+        return this.buildGamepage();
     }
 
-    updateView(newState) {}
+    buildGamepage() {
+        const leftButton = elem({
+            prop: "button",
+            id: "activate",
+            className: "rotateButton",
+            children: [elem({ prop: "span" })],
+        });
+        const middleButton = elem({
+            prop: "button",
+            id: "activate",
+            children: [elem({ prop: "span" })],
+        });
+        const rightButton = elem({
+            prop: "button",
+            id: "activate",
+            children: [elem({ prop: "span" })],
+        });
 
-    placeShip(newState) {}
+        const shipContainer = elem({
+            prop: "div",
+            className: "shipContainer",
+        });
 
-    updateShipQueue(newQueue) {}
-    // initShipQueue() {
-    //     const shipList = this.currentState;
-    //     console.log(shipList);
-    // }
+        const messageContainer = elem({
+            prop: "div",
+            className: "shipFooter",
+        });
 
-    loadPlayerBoard() {}
+        new GameMessage( this.viewModel, messageContainer );
 
-    updatePlayerBoard(newState) {}
+        const gameContainer = elem({
+            prop: "div",
+            className: "gameContainer",
+            children: [
+                elem({
+                    prop: "div",
+                    className: "p1GridContainer",
+                    children: [
+                        elem({
+                            prop: "video",
+                            className: "waves",
+                            src: wavesSrc,
+                            autoplay: true,
+                            loop: true,
+                        }),
+
+                        elem({
+                            prop: "div",
+                            className: "shipBow",
+                            children: [
+                                elem({ prop: "div", className: "shipBowWood" }),
+                                elem({ prop: "div", className: "flakBarrel1" }),
+                                elem({ prop: "div", className: "flakBarrel2" }),
+                                elem({ prop: "div", className: "flakBarrel3" }),
+                                elem({ prop: "div", className: "flakBarrel4" }),
+                                elem({ prop: "div", className: "flakBarrel5" }),
+                                elem({ prop: "div", className: "flakBarrel6" }),
+                                elem({ prop: "div", className: "flakCover" }),
+                                elem({
+                                    prop: "div",
+                                    className: "flakCoverTop",
+                                }),
+                            ],
+                        }),
+                        elem({ prop: "div", className: "game" }),
+                    ],
+                }),
+                elem({
+                    prop: "div",
+                    className: "p1OptionsContainer",
+                    children: [
+                        elem({
+                            prop: "div",
+                            className: "radarContainer",
+                            children: [
+                                elem({
+                                    prop: "ul",
+                                    className: "radar",
+                                    children: [
+                                        elem({
+                                            prop: "li",
+                                            className: "radarLine",
+                                        }),
+                                        elem({
+                                            prop: "li",
+                                            className: "radarLine",
+                                        }),
+                                        elem({
+                                            prop: "li",
+                                            className: "radarLine",
+                                        }),
+                                        elem({
+                                            prop: "li",
+                                            className: "radarLine",
+                                        }),
+                                        elem({
+                                            prop: "li",
+                                            className: "radarLine",
+                                        }),
+                                        elem({
+                                            prop: "li",
+                                            className: "radarLine",
+                                        }),
+                                        elem({
+                                            prop: "li",
+                                            className: "radarLine",
+                                        }),
+                                        elem({
+                                            prop: "li",
+                                            className: "radarLine",
+                                        }),
+                                        elem({
+                                            prop: "li",
+                                            className: "radarLine",
+                                        }),
+                                        elem({
+                                            prop: "li",
+                                            className: "radarLine",
+                                        }),
+                                        elem({
+                                            prop: "li",
+                                            className: "radarLine",
+                                        }),
+                                        elem({
+                                            prop: "li",
+                                            className: "radarLine",
+                                        }),
+                                    ],
+                                }),
+                            ],
+                        }),
+                        elem({
+                            prop: "div",
+                            className: "p1ShipStage",
+                            draggable: false,
+                            children: [ shipContainer, messageContainer ],
+                        }),
+                        elem({
+                            prop: "div",
+                            className: "buttonContainer",
+                            children: [
+                                elem({
+                                    prop: "div",
+                                    className: "leftButton",
+                                    children: [
+                                        elem({
+                                            prop: "div",
+                                            className: "base",
+                                            children: [leftButton],
+                                        }),
+                                        elem({
+                                            prop: "div",
+                                            className: "buttonText",
+                                            textContent: "Rotate",
+                                        }),
+                                    ],
+                                }),
+                                elem({
+                                    prop: "div",
+                                    className: "middleButton",
+                                    children: [
+                                        elem({
+                                            prop: "div",
+                                            className: "base",
+                                            children: [middleButton],
+                                        }),
+                                        elem({
+                                            prop: "div",
+                                            className: "buttonText",
+                                            textContent: "Auto-place",
+                                        }),
+                                    ],
+                                }),
+                                elem({
+                                    prop: "div",
+                                    className: "rightButton",
+                                    children: [
+                                        elem({
+                                            prop: "div",
+                                            className: "base",
+                                            children: [rightButton],
+                                        }),
+                                        elem({
+                                            prop: "div",
+                                            className: "buttonText",
+                                            textContent: "Reset",
+                                        }),
+                                    ],
+                                }),
+                            ],
+                        }),
+                    ],
+                }),
+            ],
+        });
+        return gameContainer;
+    }
+
 }

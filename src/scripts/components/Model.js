@@ -7,6 +7,7 @@ export default class Model {
         this.AI = new AI();
         this.currentTurn = "player";
         this.currentPage = "homePage";
+        this.namePageIsOpen = false;
         this.stateMessage = "";
         this.gameState = null;
     }

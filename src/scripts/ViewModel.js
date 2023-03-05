@@ -6,9 +6,9 @@ export default class ViewModel {
 
     register(pubsub) {
         this.pubsubs.push(pubsub);
-        if (pubsub.shouldUpdate({}, this.model)) {
-            pubsub.render(this.model);
-        }
+        const element = pubsub.getElement();
+        // TODO: check if any other pubsubs are tied to this element ^.  If they are, remove them from the pubsub list
+        element.replaceChildren(pubsub.render(this.model));
     }
 
     updateModel(modelUpdateFunc) {
@@ -20,7 +20,8 @@ export default class ViewModel {
         }
         for (let pubsub of this.pubsubs) {
             if (pubsub.shouldUpdate(oldModel, newModel)) {
-                pubsub.render(this.model);
+                const element = pubsub.getElement();
+                element.replaceChildren(pubsub.render(this.model));
             }
         }
     }

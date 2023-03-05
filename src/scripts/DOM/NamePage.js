@@ -3,32 +3,25 @@ import "../../CSS/namepage.css";
 import PubSubInterface from "../PubSubInterface.js";
 
 export default class NamePage extends PubSubInterface {
-    constructor(viewModel) {
-        super(viewModel);
-        this.container = document.querySelector(".newGameContainer");
-        this.element = this.buildForm();
-
-        super.onInit();
+    constructor(viewModel, element) {
+        super(viewModel, element);
     }
 
-    shouldUpdate(oldModel, newModel) {
-        return (
-            (newModel.currentPage === "namePage" &&
-                oldModel.currentPage !== "namePage") ||
-            (oldModel.currentPage === "namePage" &&
-                newModel.currentPage !== "namePage")
-        );
-    }
+    render({namePageIsOpen}) {
+        const newGameBtn = elem({
+            prop: "div",
+            textContent: "New Game",
+            className: "newGame",
+        });
 
-    render({ currentPage }) {
-        if (currentPage === "namePage") {
-            this.container.appendChild(this.element);
-        }
-        if (currentPage === "mapPage") {
-            const oldPage = document.querySelector(".homepageContainer");
-            oldPage.classList.add("hide");
-            setTimeout(() => oldPage.remove(), 750);
-        }
+        newGameBtn.addEventListener("click", () => {
+            this.viewModel.updateModel((oldModel) => {
+                return {namePageIsOpen: true};
+            });
+        });
+
+
+        return namePageIsOpen ? this.buildForm() : newGameBtn;
     }
 
     buildForm() {
