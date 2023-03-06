@@ -5,18 +5,26 @@ import wavesSrc from "../../assets/videos/ocean.mp4";
 import GameMessage from "./gameElements/GameMessage.js";
 import "../../CSS/stagingscreen.css";
 import elem from "./elem.js";
+import BoardElem from "./gameElements/BoardElem.js";
 
 export default class GamePage extends PubSubInterface {
     constructor(viewModel, element) {
         super(viewModel, element);
     }
 
-
-    render(model) {
-        return this.buildGamepage();
+    shouldUpdate(oldModel, newModel) {
+        return (
+            oldModel.gameState === "placeShips" &&
+            newModel.gameState !== "placeShips" &&
+            oldModel.currentPage === "gamePage"
+        );
     }
 
-    buildGamepage() {
+    render(model) {
+        return this.buildGamepage(model);
+    }
+
+    buildGamepage(model) {
         const leftButton = elem({
             prop: "button",
             id: "activate",
@@ -34,17 +42,36 @@ export default class GamePage extends PubSubInterface {
             children: [elem({ prop: "span" })],
         });
 
+        if (model.gameState === "placeShips") {
+            leftButton.addEventListener("click", () => {
+                this.viewModel.updateModel((oldModel) => {
+                    const newModel = { ...oldModel };
+                    newModel.player.shipQueue[0].isHorizontal =
+                        !newModel.player.shipQueue[0].isHorizontal;
+                    return newModel;
+                });
+            });
+        }
+
         const shipContainer = elem({
             prop: "div",
             className: "shipContainer",
         });
+
+        new ShipQueue(this.viewModel, shipContainer);
 
         const messageContainer = elem({
             prop: "div",
             className: "shipFooter",
         });
 
-        new GameMessage( this.viewModel, messageContainer );
+        new GameMessage(this.viewModel, messageContainer);
+
+        const game = elem({ prop: "div", className: "game" });
+
+        if (model.gameState === "placeShips") {
+            new BoardElem(this.viewModel, game);
+        }
 
         const gameContainer = elem({
             prop: "div",
@@ -80,7 +107,7 @@ export default class GamePage extends PubSubInterface {
                                 }),
                             ],
                         }),
-                        elem({ prop: "div", className: "game" }),
+                        game,
                     ],
                 }),
                 elem({
@@ -151,7 +178,7 @@ export default class GamePage extends PubSubInterface {
                             prop: "div",
                             className: "p1ShipStage",
                             draggable: false,
-                            children: [ shipContainer, messageContainer ],
+                            children: [shipContainer, messageContainer],
                         }),
                         elem({
                             prop: "div",
@@ -213,5 +240,4 @@ export default class GamePage extends PubSubInterface {
         });
         return gameContainer;
     }
-
 }

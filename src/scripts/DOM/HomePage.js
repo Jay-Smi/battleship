@@ -1,7 +1,7 @@
 import PubSubInterface from "../PubSubInterface.js";
 import elem from "./elem.js";
 import "../../CSS/homepage.css";
-import NamePage from "./NamePage.js";
+import HomePageInput from "./HomePageInput.js";
 
 export default class HomePage extends PubSubInterface {
     constructor(viewModel, element) {
@@ -22,14 +22,12 @@ export default class HomePage extends PubSubInterface {
             })
         );
 
-
-
         const newGame = elem({
             prop: "main",
-            className: "newGameContainer"
+            className: "newGameContainer",
         });
 
-        new NamePage(this.viewModel, newGame);
+        new HomePageInput(this.viewModel, newGame);
 
         homepageContainer.appendChild(newGame);
         homepageContainer.appendChild(
@@ -66,5 +64,4 @@ export default class HomePage extends PubSubInterface {
 
         return homepageContainer;
     }
-
 }

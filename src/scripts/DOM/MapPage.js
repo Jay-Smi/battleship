@@ -9,9 +9,7 @@ export default class MapPage extends PubSubInterface {
         super(viewModel, element);
     }
 
-
-    render({stateMessage, player}) {
-
+    render({ stateMessage, player }) {
         const redPins = [
             elem({
                 prop: "img",
@@ -44,10 +42,10 @@ export default class MapPage extends PubSubInterface {
                     return newModel;
                 });
             });
-            if(stateMessage !== pin.id) {
+            if (stateMessage !== pin.id) {
                 pin.addEventListener("mouseenter", () => {
                     this.viewModel.updateModel((oldModel) => {
-                        return {stateMessage: pin.id};
+                        return { stateMessage: pin.id };
                     });
                 });
             }
@@ -59,7 +57,7 @@ export default class MapPage extends PubSubInterface {
             children: redPins,
         });
 
-        if(stateMessage) {
+        if (stateMessage) {
             const note = this.buildNote(stateMessage, player);
             map.appendChild(note);
         }

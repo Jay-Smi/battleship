@@ -2,12 +2,12 @@ import elem from "./elem.js";
 import "../../CSS/namepage.css";
 import PubSubInterface from "../PubSubInterface.js";
 
-export default class NamePage extends PubSubInterface {
+export default class HomePageInput extends PubSubInterface {
     constructor(viewModel, element) {
         super(viewModel, element);
     }
 
-    render({namePageIsOpen}) {
+    render({ namePageIsOpen }) {
         const newGameBtn = elem({
             prop: "div",
             textContent: "New Game",
@@ -16,10 +16,9 @@ export default class NamePage extends PubSubInterface {
 
         newGameBtn.addEventListener("click", () => {
             this.viewModel.updateModel((oldModel) => {
-                return {namePageIsOpen: true};
+                return { namePageIsOpen: true };
             });
         });
-
 
         return namePageIsOpen ? this.buildForm() : newGameBtn;
     }
