@@ -5,5 +5,6 @@ export default class Ship {
         this.hits = 0;
         this.sunk = false;
         this.isHorizontal = false;
+        this.tiles = [];
     }
 }

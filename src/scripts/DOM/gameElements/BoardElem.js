@@ -1,9 +1,13 @@
 import PubSubInterface from "../../PubSubInterface";
 import elem from "../elem";
+import Ship from "./ShipElem";
+import { isValidPlacement, placeShip } from "../../components/Game";
 
 export default class BoardElem extends PubSubInterface {
-    constructor(viewModel, element) {
+    constructor(viewModel, element, dragEnter) {
         super(viewModel, element);
+        this.dragEnter = dragEnter;
+        this.boardSize = null;
     }
 
     render(model) {
@@ -13,12 +17,18 @@ export default class BoardElem extends PubSubInterface {
     }
 
     buildBoard(model) {
-        const board = elem({ prop: "div", className: "board" });
+        const shadowGrid = elem({ prop: "div", className: "shadowGrid" });
+        const board = elem({
+            prop: "div",
+            className: "board",
+            children: [shadowGrid],
+        });
         this.boardSize = model.player.gameboard.size;
+        const cells = [];
         for (let row = 0; row < this.boardSize; row++) {
             for (let col = 0; col < this.boardSize; col++) {
                 const cell = elem({ prop: "div", className: "cell" });
-
+                const tileRef = model.player.gameboard.board[row][col];
                 // sets data values for coordinates
                 cell.dataset.row = row;
                 cell.dataset.col = col;
@@ -30,16 +40,53 @@ export default class BoardElem extends PubSubInterface {
                 });
                 cell.addEventListener("drop", (e) => {
                     const bound = this.handleDrop.bind(this);
+                    bound(e, row, col, model);
+                });
+                cell.addEventListener("dragover", (e) => {
+                    const bound = this.handleDragOver.bind(this);
                     bound(e, row, col);
                 });
+                if (tileRef.ship) {
+                    // display ship effect
+                    cell.classList.add;
+                }
+
+                switch (tileRef.tileStatus) {
+                    case "H":
+                        // display hit marker
+                        break;
+                    case "M":
+                        // display miss marker
+                        break;
+                    case null:
+                        // do nothing
+                        break;
+                }
 
                 // appends the cell to the board container
                 // adds a reference to the DOM cell to the cells array
                 board.appendChild(cell);
-                this.cells = [];
-                this.cells.push(cell);
+
+                cells.push(cell);
             }
         }
+        this.cells = cells;
+
+        model.player.gameboard.ships.forEach((ship) => {
+            const shipElem = new Ship(ship, (clickedIndex) => {
+                // this.clickedEvent(index, clickedIndex);
+            });
+            const baseTile = ship.tiles[0];
+            const endTile = ship.tiles[ship.size - 1];
+            shipElem.element.style.gridArea = `${baseTile.row + 1} / ${
+                baseTile.col + 1
+            } / ${endTile.row + 2} / ${endTile.col + 2}`;
+            shipElem.element.classList.add("boardShip");
+            shipElem.tiles.forEach((tile) => {
+                tile.classList.add("onBoard");
+            });
+            shadowGrid.appendChild(shipElem.element);
+        });
         return board;
     }
 
@@ -53,7 +100,9 @@ export default class BoardElem extends PubSubInterface {
 
     handleDragEnter(e, row, col, model) {
         e.preventDefault();
-
+        const [clickedIndex, ship] = this.dragEnter();
+        this.draggedShip = ship;
+        this.clickedIndex = clickedIndex;
         // get all tiles with prior hover effects
         const tiles = Array.from(
             document.querySelectorAll(".hover", ".valid", ".invalid")
@@ -62,23 +111,26 @@ export default class BoardElem extends PubSubInterface {
         tiles.forEach((tile) => {
             tile.classList.remove("hover", "invalid", "valid");
         });
-        console.log(e.dataTransfer.getData("ship"));
-        // get the current ship in the queue
-        const data = e.dataTransfer.getData("ship");
 
-        const ship = JSON.parse(data);
         const isHorizontal = ship.isHorizontal;
         const length = ship.size;
         // calculate the base tile for the dragged ship
         // based on the ship index that was clicked and tile current hovered
         // (left most for horizontal, top most for vertical)
-        const baseCoords = this.getBaseTile(ship, row, col);
+        const baseCoords = this.getBaseTile(ship, row, col, clickedIndex);
         const baseRow = baseCoords.row;
         const baseCol = baseCoords.col;
+
         // check if hovered tiles are all on the board and dont overlap a ship
-        let isValid = this.isValidPlacement(ship, baseRow, baseCol);
+        let isValid = isValidPlacement(
+            ship,
+            baseRow,
+            baseCol,
+            model.player.gameboard
+        );
         let rowOffset = baseRow;
         let colOffset = baseCol;
+
         // aquire the div for every cell
         // and style according to validity
         for (let i = 0; i < length; i++) {
@@ -96,6 +148,7 @@ export default class BoardElem extends PubSubInterface {
                 rowOffset++;
             }
         }
+
         if (isValid) {
             rowOffset = baseRow;
             colOffset = baseCol;
@@ -124,61 +177,58 @@ export default class BoardElem extends PubSubInterface {
         }
     }
 
-    handleDrop(e, row, col) {
+    handleDrop(e, row, col, model) {
         e.preventDefault();
 
-        const ship = this.shipQueue.activeShip;
-        let baseCoords = this.getBaseTile(ship, row, col);
+        let baseCoords = this.getBaseTile(
+            this.draggedShip,
+            row,
+            col,
+            this.clickedIndex
+        );
         let baseRow = baseCoords.row;
         let baseCol = baseCoords.col;
 
-        let isValid = this.isValidPlacement(ship, baseRow, baseCol);
-        if (isValid) {
-            this.PubSub.publish("event", [
-                {
-                    type: "shipPlaced",
-                    data: { ship: ship, row: baseRow, col: baseCol },
-                },
-            ]);
-        }
-    }
+        let isValid = isValidPlacement(
+            this.draggedShip,
+            baseRow,
+            baseCol,
+            model.player.gameboard
+        );
 
-    isValidPlacement(ship, row, col) {
-        // checks if all hovered tiles are on the board
-        if (ship.isHorizontal === true && col + ship.size > this.cols) {
-            return false;
-        }
-        if (ship.isHorizontal === false && row + ship.size > this.rows) {
-            return false;
-        }
-        // iterates over every tile
-        // and checks if the gameboard contains a ship
-        // checks gameboard model along with a css class
-        for (let i = 0; i < ship.size; i++) {
-            const cell = this.getCell(row, col);
-            if (cell) {
-                if (
-                    cell.classList.contains("ship") ||
-                    this.gameboard.board[row][col].ship
-                ) {
-                    return false;
+        if (isValid) {
+            this.viewModel.updateModel((oldModel) => {
+                const newModel = { ...oldModel };
+                newModel.dropQueue.push(JSON.parse(JSON.stringify(oldModel)));
+                const { newGameboard, newShip } = placeShip(
+                    this.draggedShip,
+                    baseRow,
+                    baseCol,
+                    oldModel.player.gameboard
+                );
+                // console.log(newGameboard, newShip);
+                // if (oldModel.player.shipQueue.length === 1) {
+                //     newModel.gameState = "inGame";
+                // }
+                newModel.player.gameboard = newGameboard;
+                newModel.player.shipQueue.shift();
+                if (newModel.player.shipQueue.length > 0) {
+                    newModel.stateMessage = `Place your ${newModel.player.shipQueue[0].name}`;
                 }
-                if (ship.isHorizontal === true) {
-                    col++;
-                } else {
-                    row++;
-                }
-            } else {
-                return false;
-            }
+
+                newModel.player.gameboard.ships.push(newShip);
+
+                return newModel;
+            });
+        } else {
+            // TODO: handle invalid placement drop
         }
-        return true;
     }
 
     /**  calculates the left most or top most tile */
-    getBaseTile(ship, row, col) {
+    getBaseTile(ship, row, col, clickedIndex) {
         // gets the index that the ship was picked up by
-        const index = ship.clickedIndex;
+        const index = clickedIndex;
         let offsetRow = 0;
         let offsetCol = 0;
 
@@ -205,6 +255,7 @@ export default class BoardElem extends PubSubInterface {
         ) {
             return null;
         }
+
         return this.cells[row * this.boardSize + col];
     }
 }

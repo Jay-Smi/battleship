@@ -3,15 +3,23 @@ import Ship from "./ShipElem.js";
 import PubSubInterface from "../../PubSubInterface.js";
 
 export default class ShipQueue extends PubSubInterface {
-    constructor(viewModel, element) {
+    constructor(viewModel, element, clickedEvent) {
         super(viewModel, element);
+        this.clickedEvent = clickedEvent;
     }
 
-    render({ player }) {
-        return this.buildQueue(player);
+    shouldUpdate(oldModel, newModel) {
+        return newModel.gameState === "placeShips";
     }
 
-    buildQueue(player) {
+    render(model) {
+        if (model.player.shipQueue.length < 1) {
+            console.log("all ships placed");
+        }
+        return this.buildQueue(model);
+    }
+
+    buildQueue(model) {
         const stage = elem({
             prop: "div",
             className: "shipQueue",
@@ -29,8 +37,20 @@ export default class ShipQueue extends PubSubInterface {
             children: [stage, next],
         });
 
-        player.shipQueue.forEach((ship, index) => {
-            const shipElem = new Ship(ship);
+        model.player.shipQueue.forEach((ship, index) => {
+            const shipElem = new Ship(ship, (clickedIndex) => {
+                this.clickedEvent(index, clickedIndex);
+            });
+            if (model.stateMessage.includes("Enemies")) {
+                shipElem.element.addEventListener("mouseenter", (e) => {
+                    this.viewModel.updateModel((oldModel) => {
+                        const newModel = { ...oldModel };
+                        newModel.stateMessage = `Place your ${newModel.player.shipQueue[0].name}`;
+                        return newModel;
+                    });
+                });
+            }
+
             if (index === 0) {
                 next.appendChild(shipElem.element);
             } else {

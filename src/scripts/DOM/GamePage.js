@@ -1,11 +1,16 @@
 // import Board from "./boardView.js";
-import ShipQueue from "./gameElements/ShipQueue.js";
 import PubSubInterface from "../PubSubInterface.js";
 import wavesSrc from "../../assets/videos/ocean.mp4";
-import GameMessage from "./gameElements/GameMessage.js";
 import "../../CSS/stagingscreen.css";
 import elem from "./elem.js";
+import GameMessage from "./gameElements/GameMessage.js";
+import ShipQueue from "./gameElements/ShipQueue.js";
 import BoardElem from "./gameElements/BoardElem.js";
+import {
+    placeShip,
+    isValidPlacement,
+    placeShipRandomly,
+} from "../components/Game.js";
 
 export default class GamePage extends PubSubInterface {
     constructor(viewModel, element) {
@@ -51,6 +56,36 @@ export default class GamePage extends PubSubInterface {
                     return newModel;
                 });
             });
+
+            middleButton.addEventListener("click", () => {
+                this.viewModel.updateModel((oldModel) => {
+                    const newModel = { ...oldModel };
+                    newModel.dropQueue.push(
+                        JSON.parse(JSON.stringify(oldModel))
+                    );
+                    while (newModel.player.shipQueue.length > 0) {
+                        const ship = newModel.player.shipQueue.shift();
+
+                        const { newGameboard, newShip } = placeShipRandomly(
+                            ship,
+                            newModel.player.gameboard
+                        );
+                        newModel.player.gameboard = newGameboard;
+                        newModel.player.gameboard.ships.push(newShip);
+                    }
+
+                    return newModel;
+                });
+            });
+
+            rightButton.addEventListener("click", () => {
+                if (model.dropQueue.length > 0) {
+                    this.viewModel.updateModel((oldModel) => {
+                        const newModel = oldModel.dropQueue.pop();
+                        return newModel;
+                    });
+                }
+            });
         }
 
         const shipContainer = elem({
@@ -58,7 +93,14 @@ export default class GamePage extends PubSubInterface {
             className: "shipContainer",
         });
 
-        new ShipQueue(this.viewModel, shipContainer);
+        new ShipQueue(
+            this.viewModel,
+            shipContainer,
+            (shipIndex, clickedIndex) => {
+                this.clickedIndex = clickedIndex;
+                this.draggedShipIndex = shipIndex;
+            }
+        );
 
         const messageContainer = elem({
             prop: "div",
@@ -70,7 +112,12 @@ export default class GamePage extends PubSubInterface {
         const game = elem({ prop: "div", className: "game" });
 
         if (model.gameState === "placeShips") {
-            new BoardElem(this.viewModel, game);
+            new BoardElem(this.viewModel, game, () => {
+                return [
+                    this.clickedIndex,
+                    model.player.shipQueue[this.draggedShipIndex],
+                ];
+            });
         }
 
         const gameContainer = elem({
@@ -228,7 +275,7 @@ export default class GamePage extends PubSubInterface {
                                         elem({
                                             prop: "div",
                                             className: "buttonText",
-                                            textContent: "Reset",
+                                            textContent: "Undo",
                                         }),
                                     ],
                                 }),

@@ -11,18 +11,10 @@ export default class GameMessage extends PubSubInterface {
     }
 
     render({ stateMessage }) {
-        let message = null;
-
-        switch (stateMessage) {
-            case "":
-                message = "Enemies approach. Deploy the fleet.";
-                break;
-        }
-
         return elem({
             prop: "p",
             className: "stagePara",
-            textContent: message,
+            textContent: stateMessage,
         });
     }
 }

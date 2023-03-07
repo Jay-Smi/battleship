@@ -6,7 +6,7 @@ import submarineSrc from "../../../assets/images/Submarine.svg";
 import patrolBoatSrc from "../../../assets/images/Patrol-Boat.svg";
 
 export default class Ship {
-    constructor(ship) {
+    constructor(ship, clickedEvent) {
         this.shipModel = ship;
 
         this.tiles = [];
@@ -14,6 +14,8 @@ export default class Ship {
         this.clickedIndex = null;
 
         this.element = this.create();
+
+        this.clickedEvent = clickedEvent;
     }
 
     create() {
@@ -24,7 +26,6 @@ export default class Ship {
         ship.draggable = true;
         let shipSrc = null;
 
-        // console.log(this.shipModel.isHorizontal);
         let shipClass = this.shipModel.isHorizontal ? "horizontal" : "vertical";
         ship.classList.add(shipClass);
 
@@ -62,7 +63,7 @@ export default class Ship {
 
             // adds click listener to set clicked index
             tile.addEventListener("mousedown", (e) => {
-                this.clickedIndex = i;
+                this.clickedEvent(i);
             });
 
             // add tiles to the ship
@@ -85,20 +86,14 @@ export default class Ship {
         shipOverlay.draggable = false;
         ship.appendChild(shipOverlay);
 
-        ship.addEventListener("dragstart", this.handleDragStart.bind(this));
-
+        ship.addEventListener("dragstart", (e) => {
+            const bound = this.handleDragStart.bind(this);
+            bound(e);
+        });
         return ship;
     }
 
     handleDragStart(e) {
-        e.dataTransfer.setData(
-            "ship",
-            JSON.stringify({
-                ...this.shipModel,
-                clickedIndex: this.clickedIndex,
-            })
-        );
-
         this.tiles.forEach((tile) => {
             tile.style.width = "40px";
             tile.style.height = "40px";

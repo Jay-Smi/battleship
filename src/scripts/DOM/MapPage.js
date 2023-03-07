@@ -37,7 +37,8 @@ export default class MapPage extends PubSubInterface {
                     const newModel = { ...oldModel };
                     newModel.currentPage = "gamePage";
                     newModel.gameState = "placeShips";
-                    newModel.stateMessage = "";
+                    newModel.stateMessage =
+                        "Enemies approach. Deploy the fleet.";
                     newModel.AI.difficulty = pin.id;
                     return newModel;
                 });
