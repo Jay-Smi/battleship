@@ -387,11 +387,12 @@ button#activate.pushed {
     flex-direction: column;
 }
 
-.CarrierContainer:hover,
-.BattleshipContainer:hover,
-.DestroyerContainer:hover,
-.SubmarineContainer:hover,
-.Patrol-BoatContainer:hover {
+#CarrierOverlay,
+#BattleshipOverlay,
+#DestroyerOverlay,
+#SubmarineOverlay,
+#Patrol-BoatOverlay {
+    object-fit: contain;
 }
 
 #Carrier,
