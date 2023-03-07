@@ -1,6 +1,6 @@
 import elem from "../elem";
 import carrierSrc from "../../../assets/images/Carrier.svg";
-import battleshipSrc from "../../../assets/images/Battleship.svg";
+import battleshipSrc from "../../../assets/images/Battleship2.svg";
 import destroyerSrc from "../../../assets/images/Destroyer.svg";
 import submarineSrc from "../../../assets/images/Submarine.svg";
 import patrolBoatSrc from "../../../assets/images/Patrol-Boat.svg";
