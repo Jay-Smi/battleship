@@ -6,11 +6,7 @@ import elem from "./elem.js";
 import GameMessage from "./gameElements/GameMessage.js";
 import ShipQueue from "./gameElements/ShipQueue.js";
 import BoardElem from "./gameElements/BoardElem.js";
-import {
-    placeShip,
-    isValidPlacement,
-    placeShipRandomly,
-} from "../components/Game.js";
+import { placeShipRandomly } from "../components/Game.js";
 
 export default class GamePage extends PubSubInterface {
     constructor(viewModel, element) {
