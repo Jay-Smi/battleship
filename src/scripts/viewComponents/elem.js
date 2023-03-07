@@ -72,6 +72,14 @@ const elem = (content, version = 1) => {
     if (draggable) {
         el.draggable = true;
     }
+    let min = content["min"];
+    if (min) {
+        el.min = min;
+    }
+    let max = content["max"];
+    if (max) {
+        el.max = max;
+    }
     let children = content["children"];
     if (children) {
         for (let child of children) {

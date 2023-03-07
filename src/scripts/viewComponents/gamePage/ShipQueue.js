@@ -38,23 +38,25 @@ export default class ShipQueue extends PubSubInterface {
         });
 
         model.player.shipQueue.forEach((ship, index) => {
-            const shipElem = new Ship(ship, (clickedIndex) => {
-                this.clickedEvent(index, clickedIndex);
-            });
-            if (model.stateMessage.includes("Enemies")) {
-                shipElem.element.addEventListener("mouseenter", (e) => {
-                    this.viewModel.updateModel((oldModel) => {
-                        const newModel = { ...oldModel };
-                        newModel.stateMessage = `Place your ${newModel.player.shipQueue[0].name}`;
-                        return newModel;
-                    });
+            if (ship) {
+                const shipElem = new Ship(ship, (clickedIndex) => {
+                    this.clickedEvent(index, clickedIndex);
                 });
-            }
+                if (model.stateMessage.includes("Enemies")) {
+                    shipElem.element.addEventListener("mouseenter", (e) => {
+                        this.viewModel.updateModel((oldModel) => {
+                            const newModel = { ...oldModel };
+                            newModel.stateMessage = `Place your ${newModel.player.shipQueue[0].name}`;
+                            return newModel;
+                        });
+                    });
+                }
 
-            if (index === 0) {
-                next.appendChild(shipElem.element);
-            } else {
-                stage.prepend(shipElem.element);
+                if (index === 0) {
+                    next.appendChild(shipElem.element);
+                } else {
+                    stage.prepend(shipElem.element);
+                }
             }
         });
 

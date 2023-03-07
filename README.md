@@ -14,3 +14,5 @@ Big Red button Credit: Maka Lee Ulloa https://codepen.io/MakaUlloa/pen/eYRqrRB
 Game world map background credit: <a href="https://www.freepik.com/free-vector/vector-abstract-binary-world-map_10960466.htm#query=green%20world%20map&position=5&from_view=search&track=ais">Image by GarryKillian</a> on Freepik
 
 Radar credit: Online Tutorials YT https://www.youtube.com/watch?v=HTAQkuaHIqQ
+
+Alternate waves Graphic: <a href="https://www.freepik.com/free-vector/ocean-sea-waves-ripples-water-background_24496413.htm#query=graphics%20ocean%20waves&position=44&from_view=search&track=ais">Image by starline</a> on Freepik

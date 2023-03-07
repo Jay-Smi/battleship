@@ -1,8 +1,8 @@
-import elem from "./elem.js";
-import "../../CSS/mappage.css";
-import redPinSrc from "../../assets/images/red-pin.png";
-import stickyNoteSrc from "../../assets/images/sticky-note.svg";
-import PubSubInterface from "../PubSubInterface.js";
+import elem from "../elem.js";
+import "../../../CSS/mappage.css";
+import redPinSrc from "../../../assets/images/red-pin.png";
+import stickyNoteSrc from "../../../assets/images/sticky-note.svg";
+import PubSubInterface from "../../PubSubInterface.js";
 
 export default class MapPage extends PubSubInterface {
     constructor(viewModel, element) {

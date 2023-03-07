@@ -12,6 +12,7 @@ export default class Game {
         this.stateMessage = "";
         this.gameState = null;
         this.dropQueue = [];
+        this.videoPlaying = true;
     }
 }
 
@@ -26,7 +27,8 @@ function isValidPlacement(ship, row, col, gameboard) {
         return false;
     }
     // iterates over every tile
-    // and checks if the gameboard contains a ship
+    // checks if the gameboard tile exists
+    // and if the tile contains a ship
     for (let i = 0; i < ship.size; i++) {
         if (gameboard.board[row]) {
             if (gameboard.board[row][col]) {
@@ -49,14 +51,19 @@ function isValidPlacement(ship, row, col, gameboard) {
 }
 
 function placeShip(ship, row, col, gameboard) {
-    let newGameboard = { ...gameboard };
-    let newShip = { ...ship };
+    // creates a copy of each to modify and return
+    let newGameboard = JSON.parse(JSON.stringify(gameboard));
+    let newShip = JSON.parse(JSON.stringify(ship));
 
+    // verifies the ship tile exists
+    // and doesn't contain a ship
     for (let i = 0; i < ship.size; i++) {
         if (gameboard.board[row]) {
             if (gameboard.board[row][col]) {
                 if (gameboard.board[row][col].ship === null) {
+                    // sets tile.ship to true
                     newGameboard.board[row][col].ship = true;
+                    // saves tile reference to ship
                     newShip.tiles.push(newGameboard.board[row][col]);
 
                     if (ship.isHorizontal === true) {
@@ -80,7 +87,10 @@ function placeShip(ship, row, col, gameboard) {
     return { newGameboard, newShip };
 }
 
+// recursively tries to place a ship randomly until placement is valid
+// returns the new board and new ship
 function placeShipRandomly(ship, gameboard) {
+    //
     ship.isHorizontal = Math.random() > 0.5;
 
     const randRow = Math.floor(Math.random() * 10);

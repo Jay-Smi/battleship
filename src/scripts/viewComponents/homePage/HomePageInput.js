@@ -1,6 +1,6 @@
-import elem from "./elem.js";
-import "../../CSS/namepage.css";
-import PubSubInterface from "../PubSubInterface.js";
+import elem from "../elem.js";
+import "../../../CSS/namepage.css";
+import PubSubInterface from "../../PubSubInterface.js";
 
 export default class HomePageInput extends PubSubInterface {
     constructor(viewModel, element) {

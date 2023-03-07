@@ -1,7 +1,7 @@
 import PubSubInterface from "../../PubSubInterface";
 import elem from "../elem";
 import Ship from "./ShipElem";
-import { isValidPlacement, placeShip } from "../../components/Game";
+import { isValidPlacement, placeShip } from "../../gameComponents/Game";
 
 export default class BoardElem extends PubSubInterface {
     constructor(viewModel, element, dragEnter) {
@@ -198,7 +198,7 @@ export default class BoardElem extends PubSubInterface {
 
         if (isValid) {
             this.viewModel.updateModel((oldModel) => {
-                const newModel = { ...oldModel };
+                const newModel = JSON.parse(JSON.stringify(oldModel));
                 newModel.dropQueue.push(JSON.parse(JSON.stringify(oldModel)));
                 const { newGameboard, newShip } = placeShip(
                     this.draggedShip,
@@ -206,7 +206,6 @@ export default class BoardElem extends PubSubInterface {
                     baseCol,
                     oldModel.player.gameboard
                 );
-                // console.log(newGameboard, newShip);
                 // if (oldModel.player.shipQueue.length === 1) {
                 //     newModel.gameState = "inGame";
                 // }

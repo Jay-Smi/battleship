@@ -1,7 +1,9 @@
-import Game from "./scripts/components/Game.js";
+import Game from "./scripts/gameComponents/Game.js";
 import ViewModel from "./scripts/ViewModel";
-import App from "./scripts/DOM/App.js";
+import App from "./scripts/viewComponents/App.js";
 
 const model = new Game();
-const vm = new ViewModel(model);
-new App(vm, document.querySelector("#container"));
+
+const viewModel = new ViewModel(model);
+
+const view = new App(viewModel, document.querySelector("#container"));
