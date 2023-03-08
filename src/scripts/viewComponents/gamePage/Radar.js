@@ -8,6 +8,7 @@ export default class Radar extends PubSubInterface {
 
     shouldUpdate(oldModel, newModel) {
         return (
+            newModel.gameState === "inGame" ||
             oldModel.AI.gameboard.ships.length !==
                 newModel.AI.gameboard.ships.length ||
             oldModel.player.gameboard.ships.length !==

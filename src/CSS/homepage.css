@@ -22,6 +22,7 @@ body {
     height: 100vh;
     width: 100vw;
     background-color: transparent;
+    overflow: hidden;
 }
 
 .homepageContainer {

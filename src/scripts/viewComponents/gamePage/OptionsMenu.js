@@ -21,6 +21,10 @@ export default class OptionsMenu extends PubSubInterface {
     }
 
     buildOptions(model) {
+        if (model.gameState === "inGame") {
+            // maybe add a back button or new game button
+        }
+
         const videoBtn = elem({
             prop: "div",
             id: "videoBtn",
@@ -55,10 +59,24 @@ export default class OptionsMenu extends PubSubInterface {
             const hueRotation = ((sliderValue - startingHue + 180) % 360) - 180;
             const themeColor = `hsla(${sliderValue}, 100%, 50%, 1)`;
             const lowAlphaColor = `hsla(${sliderValue}, 100%, 50%, 0.5)`;
+            const oppositeRotation = (sliderValue - startingHue + 300) % 360;
+            const oppositeTheme = `hsla(${oppositeRotation}, 100%, 50%, 1)`;
+            const oppositeLowAlphaTheme = `hsla(${oppositeRotation}, 100%, 50%, .5)`;
+            const oppositeHueRotate =
+                ((oppositeRotation - startingHue + 180) % 360) - 180;
 
             root.style.setProperty("--theme-color", themeColor);
             root.style.setProperty("--lowAlpha-color", lowAlphaColor);
             root.style.setProperty("--filter", `hue-rotate(${hueRotation}deg)`);
+            root.style.setProperty(
+                "--opposite-filter",
+                `hue-rotate(${oppositeHueRotate}deg)`
+            );
+            root.style.setProperty("--opposite-color", oppositeTheme);
+            root.style.setProperty(
+                "--opposite-lowAlpha",
+                oppositeLowAlphaTheme
+            );
         });
 
         const slideContainer = elem({

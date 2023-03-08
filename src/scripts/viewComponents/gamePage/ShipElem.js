@@ -13,6 +13,8 @@ export default class Ship {
 
         this.clickedIndex = null;
 
+        this.shipPulse = elem({ prop: "div" });
+
         this.element = this.create();
 
         this.clickedEvent = clickedEvent;
@@ -86,8 +88,14 @@ export default class Ship {
         shipOverlay.draggable = false;
         ship.appendChild(shipOverlay);
 
+        ship.appendChild(this.shipPulse);
+
         ship.addEventListener("dragstart", (e) => {
             const bound = this.handleDragStart.bind(this);
+            bound(e);
+        });
+        ship.addEventListener("dragend", (e) => {
+            const bound = this.handleDragEnd.bind(this);
             bound(e);
         });
         return ship;
@@ -101,6 +109,18 @@ export default class Ship {
                 tile.style.width = "30px";
                 tile.style.height = "30px";
             }, 0);
+        });
+    }
+
+    handleDragEnd(e) {
+        e.preventDefault();
+        // get all tiles with prior hover effects
+        const tiles = Array.from(
+            document.querySelectorAll(".hover", ".valid", ".invalid")
+        );
+        // clear their hover effects
+        tiles.forEach((tile) => {
+            tile.classList.remove("hover", "invalid", "valid");
         });
     }
 }

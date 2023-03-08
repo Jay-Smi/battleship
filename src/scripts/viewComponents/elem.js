@@ -80,6 +80,10 @@ const elem = (content, version = 1) => {
     if (max) {
         el.max = max;
     }
+    let step = content["step"];
+    if (step) {
+        el.step = step;
+    }
     let children = content["children"];
     if (children) {
         for (let child of children) {

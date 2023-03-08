@@ -11,6 +11,7 @@ export default class Game {
         this.namePageIsOpen = false;
         this.stateMessage = "";
         this.gameState = null;
+        this.allShipsPlaced = false;
         this.dropQueue = [];
         this.videoPlaying = true;
     }
@@ -105,4 +106,90 @@ function placeShipRandomly(ship, gameboard) {
     }
 }
 
-export { isValidPlacement, placeShip, placeShipRandomly };
+function checkAllShipsPlaced(player) {
+    return player.shipQueue.length < 1;
+}
+
+function resetBoard(gameboard) {
+    for (let row = 0; row < gameboard.size; row++) {
+        for (let col = 0; col < gameboard.size; col++) {
+            gameboard.board[row][col].ship = null;
+            gameboard.board[row][col].tileStatus = null;
+        }
+    }
+}
+
+function resetShips(player) {
+    while (player.gameboard.ships.length > 0) {
+        player.gameboard.ships[0].tiles = [];
+        player.shipQueue.push(player.gameboard.ships.shift());
+    }
+}
+
+// update the gameboard's tileStaus
+// if ship, ++hits
+// check sunk
+// if sunk, check all sunk
+// if all sunk update gameState
+function attack(row, col, gameboard) {
+    const tile = gameboard.board[row][col];
+
+    if (tile.tileStatus !== null) {
+        console.warn("Tile already attacked.");
+        return false;
+    }
+
+    if (tile.ship !== null) {
+        console.log("hit");
+        tile.tileStatus = "hit";
+        const ship = getShip(row, col, gameboard);
+        ship.hits++;
+        if (checkShipSunk(ship)) {
+            ship.sunk = true;
+            const allSunk = checkAllShipsSunk(gameboard.ships);
+            if (allSunk) {
+                console.log("All ships sunk, game over!");
+                return;
+            }
+        }
+        return gameboard;
+    } else {
+        console.log("miss");
+        tile.tileStatus = "miss";
+        return gameboard;
+    }
+}
+
+function checkShipSunk(ship) {
+    return ship.hits === ship.size;
+}
+
+function checkAllShipsSunk(shipList) {
+    for (const ship of shipList) {
+        if (!checkShipSunk(ship)) return false;
+    }
+    return true;
+}
+
+function getShip(cRow, cCol, gameboard) {
+    for (const ship of gameboard.ships) {
+        for (const { row, col } of ship.tiles) {
+            if (cRow === row && cCol === col) {
+                return ship;
+            }
+        }
+    }
+    return null;
+}
+
+export {
+    isValidPlacement,
+    placeShip,
+    placeShipRandomly,
+    checkAllShipsPlaced,
+    resetBoard,
+    resetShips,
+    attack,
+    checkShipSunk,
+    checkAllShipsSunk,
+};

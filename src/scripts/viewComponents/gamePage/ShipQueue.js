@@ -13,9 +13,6 @@ export default class ShipQueue extends PubSubInterface {
     }
 
     render(model) {
-        if (model.player.shipQueue.length < 1) {
-            console.log("all ships placed");
-        }
         return this.buildQueue(model);
     }
 
@@ -30,6 +27,10 @@ export default class ShipQueue extends PubSubInterface {
             className: "nextShipContainer",
             draggable: false,
         });
+
+        if (!model.namePageIsOpen) {
+            next.classList.add("hideNext");
+        }
 
         const queue = elem({
             prop: "div",
