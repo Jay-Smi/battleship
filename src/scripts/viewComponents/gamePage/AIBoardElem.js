@@ -117,6 +117,19 @@ export default class AIBoardElem extends PubSubInterface {
                 newModel.stateMessage = "Already attacked there sir";
                 return newModel;
             }
+            if (attResponse.tileStatus === "hit") {
+                newModel.stateMessage = "Direct hit sir!";
+            }
+            if (attResponse.tileStatus === "miss") {
+                newModel.stateMessage = "Nothing there sir!";
+            }
+            let enemyDelay = 1500;
+            if (attResponse.ship) {
+                if (attResponse.ship.sunk) {
+                    newModel.stateMessage = `We've sunk their ${attResponse.ship.name}`;
+                    enemyDelay = 2500;
+                }
+            }
 
             const clickedTile = AIgameboard.board[row][col];
             if (checkAllShipsSunk(AIgameboard.ships)) {
@@ -125,30 +138,52 @@ export default class AIBoardElem extends PubSubInterface {
 
             setTimeout(() => {
                 this.viewModel.updateModel((oldModel1) => {
+                    this.lastClicked = null;
                     const newModel = JSON.parse(JSON.stringify(oldModel1));
 
                     const playerGameboard = newModel.player.gameboard;
 
                     switch (newModel.AI.difficulty) {
                         case "easy":
-                            AIMoveEasy(playerGameboard);
+                            newModel.lastClicked = AIMoveEasy(playerGameboard);
                             break;
                         case "medium":
-                            AIMoveMedium(playerGameboard);
+                            newModel.lastClicked =
+                                AIMoveMedium(playerGameboard);
 
                             break;
                         case "hard":
-                            AIMoveMedium(playerGameboard);
+                            newModel.lastClicked =
+                                AIMoveMedium(playerGameboard);
                             break;
+                    }
+                    console.log(newModel.lastClicked.attResponse);
+
+                    if (
+                        newModel.lastClicked.attackResponse.tileStatus === "hit"
+                    ) {
+                        newModel.stateMessage = "We're taking on water sir!";
+                    }
+                    if (
+                        newModel.lastClicked.attackResponse.tileStatus ===
+                        "miss"
+                    ) {
+                        newModel.stateMessage = "The enemy must be blind";
+                    }
+                    if (newModel.lastClicked.attackResponse.ship) {
+                        if (newModel.lastClicked.attackResponse.ship.sunk) {
+                            newModel.stateMessage = `They've sunk our ${newModel.lastClicked.attackResponse.ship.name}`;
+                        }
                     }
 
                     const clickedTile = playerGameboard.board[row][col];
                     if (checkAllShipsSunk(playerGameboard.ships)) {
                         newModel.gameState = "AIWins";
                     }
+
                     return newModel;
                 });
-            }, 0);
+            }, enemyDelay);
 
             return newModel;
         });

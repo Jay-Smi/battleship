@@ -66,19 +66,20 @@ export default class ScoreContainer extends PubSubInterface {
 
             mid.appendChild(score);
 
-            if (!ship.sunk) {
-                shipIcon.classList.add("alive");
-                top.appendChild(shipIcon);
-            } else {
-                shipIcon.classList.add("sunk");
-                bot.appendChild(shipIcon);
-            }
-
             const shipCol = elem({
                 prop: "div",
                 className: "shipCol",
                 children: [top, mid, bot],
             });
+
+            if (!ship.sunk) {
+                shipIcon.classList.add("alive");
+                top.appendChild(shipIcon);
+            } else {
+                shipIcon.classList.add("sunk");
+                shipCol.classList.add("shipSunk");
+                bot.appendChild(shipIcon);
+            }
 
             scoreContainer.appendChild(shipCol);
         });

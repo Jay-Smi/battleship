@@ -677,46 +677,84 @@ button#activate.pushed {
     width: 30px;
 }
 
+.AIBoardContainer {
+    margin-top: auto;
+}
+
 .cell {
-    height: 100%;
-    width: 100%;
     border: 1px solid var(--lowAlpha-color);
-}
-
-.cell.hit {
-    border: 5px solid red;
-}
-
-.cell.miss {
-    border: 5px solid green;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
 }
 
 .cell:hover {
     box-shadow: inset 0 0 20px var(--lowAlpha-color);
 }
 
+.cell.hit::after {
+    content: "";
+    background-color: var(--opposite-lowAlpha);
+    box-shadow: 0 0 15px var(--opposite-lowAlpha);
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    opacity: 60%;
+}
+
+.cell.hit::before {
+    position: absolute;
+    content: "";
+    border: 3px solid var(--opposite-lowAlpha);
+    box-shadow: inset 0 0 15px var(--opposite-lowAlpha),
+        0 0 15px var(--opposite-lowAlpha);
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    opacity: 60%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.cell.miss::before {
+    content: "";
+    border: 3px solid var(--lowAlpha-color);
+
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    opacity: 70%;
+    box-shadow: inset 0 0 15px var(--lowAlpha-color),
+        0 0 15px var(--lowAlpha-color);
+    margin-left: auto;
+    margin-right: auto;
+    filter: blur(1.5px);
+}
+
 .AIBoardContainer .cell {
     border: 1px solid var(--opposite-lowAlpha);
-    cursor: pointer;
+    cursor: crosshair;
 }
-.AIBoardContainer .cell:hover {
-    box-shadow: inset 0 0 20px var(--lowAlpha-color);
-}
-
-.AIBoardContainer .cell.hit {
-    border: 5px solid green;
+.AIBoardContainer .cell.miss::before {
+    border: 3px solid var(--opposite-lowAlpha);
+    box-shadow: inset 0 0 10px var(--opposite-lowAlpha),
+        0 0 10px var(--opposite-lowAlpha);
 }
 
-.AIBoardContainer .cell.miss {
-    border: 5px solid red;
+.AIBoardContainer .cell.hit::after {
+    background-color: var(--lowAlpha-color);
+    box-shadow: 0 0 15px var(--lowAlpha-color);
 }
 
-.cell.hit.pulse {
-    animation: pulse2 0.7s ease-out;
+.AIBoardContainer .cell.hit::before {
+    border: 3px solid var(--lowAlpha-color);
+    box-shadow: inset 0 0 15px var(--lowAlpha-color),
+        0 0 15px var(--lowAlpha-color);
 }
 
-.cell.miss.pulse {
-    animation: pulse2 0.7s ease-out;
+.cell.pulse::before {
+    animation: pulse2 1s linear;
 }
 
 @keyframes pulse2 {
@@ -724,11 +762,19 @@ button#activate.pushed {
         transform: scale(1);
     }
 
+    40% {
+        transform: scale(3);
+    }
+
+    50% {
+        transform: scale(1);
+    }
     90% {
-        transform: scale(2);
+        transform: scale(3);
     }
 
     100% {
+        transform: scale(1);
     }
 }
 
@@ -1195,14 +1241,6 @@ button#activate.pushed {
     transform: scale(1.2);
 }
 
-.shipCol:nth-child(1) {
-    border-left: none;
-}
-
-.shipCol:nth-child(5) {
-    border-right: none;
-}
-
 .shipCol img {
     width: 80%;
     height: 80%;
@@ -1240,6 +1278,38 @@ button#activate.pushed {
 
 .botSection {
     height: 33%;
+}
+
+.shipCol.shipSunk {
+    border-left: 1px solid var(--opposite-lowAlpha);
+    border-right: 1px solid var(--opposite-lowAlpha);
+}
+
+.shipCol.shipSunk .midSection {
+    color: var(--opposite-color);
+}
+.shipCol.shipSunk img {
+    filter: var(--opposite-filter);
+}
+
+.AIStage .shipCol.shipSunk {
+    border-left: 1px solid var(--lowAlpha-color);
+    border-right: 1px solid var(--lowAlpha-color);
+}
+
+.AIStage .shipCol.shipSunk .midSection {
+    color: var(--theme-color);
+}
+.AIStage .shipCol.shipSunk img {
+    filter: var(--filter);
+}
+
+.shipCol:nth-child(1) {
+    border-left: none;
+}
+
+.shipCol:nth-child(5) {
+    border-right: none;
 }
 
 .optionsContainer.inGame {
@@ -1334,16 +1404,6 @@ button#activate.pushed {
     .flakBarrel6 {
         transform: translate(-20px, 0px) rotate(20deg);
     }
-    .radarContainer {
-        position: fixed;
-        top: -20px;
-        left: -50px;
-        height: 300px;
-        width: 350px;
-        background-color: transparent;
-        transform: scale(0.7);
-        border: none;
-    }
 }
 
 @media (max-width: 1550px) {
@@ -1402,6 +1462,16 @@ button#activate.pushed {
     .waves {
         top: 50px;
         transform: scale(2);
+    }
+    .radarContainer {
+        position: fixed;
+        top: -20px;
+        left: -50px;
+        height: 300px;
+        width: 350px;
+        background-color: transparent;
+        transform: scale(0.7);
+        border: none;
     }
 }
 

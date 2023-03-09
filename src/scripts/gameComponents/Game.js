@@ -140,9 +140,11 @@ function attack(row, col, gameboard) {
         return false;
     }
 
+    let ship = null;
+
     if (tile.ship !== null) {
         tile.tileStatus = "hit";
-        const ship = getShip(row, col, gameboard);
+        ship = getShip(row, col, gameboard);
         ship.hits++;
         if (checkShipSunk(ship)) {
             ship.sunk = true;
@@ -150,7 +152,11 @@ function attack(row, col, gameboard) {
     } else {
         tile.tileStatus = "miss";
     }
-    return gameboard;
+
+    return {
+        tileStatus: tile.tileStatus,
+        ship,
+    };
 }
 
 function checkShipSunk(ship) {
@@ -186,7 +192,8 @@ function AIMoveEasy(playerGameboard) {
     if (randTile.tileStatus !== null) {
         return AIMoveEasy(playerGameboard);
     } else {
-        return attack(randRow, randCol, playerGameboard);
+        const attackResponse = attack(randRow, randCol, playerGameboard);
+        return { row: randRow, col: randCol, attackResponse };
     }
 }
 
@@ -237,7 +244,13 @@ function AIMoveMedium(playerGameboard) {
         targetTile = unattackedTiles[randomIndex];
     }
 
-    return attack(targetTile.row, targetTile.col, playerGameboard);
+    const attackResponse = attack(
+        targetTile.row,
+        targetTile.col,
+        playerGameboard
+    );
+
+    return { row: targetTile.row, col: targetTile.col, attackResponse };
 }
 
 function getAdjacentTiles(playerGameboard, tile) {

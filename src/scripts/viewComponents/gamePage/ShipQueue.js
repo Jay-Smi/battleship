@@ -38,6 +38,8 @@ export default class ShipQueue extends PubSubInterface {
             children: [stage, next],
         });
 
+        queue.draggable = false;
+
         model.player.shipQueue.forEach((ship, index) => {
             if (ship) {
                 const shipElem = new Ship(ship, (clickedIndex) => {
