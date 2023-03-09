@@ -3,8 +3,10 @@ import elem from "../elem";
 import Ship from "./ShipElem";
 import {
     attack,
-    checkShipSunk,
     checkAllShipsSunk,
+    AIMoveEasy,
+    AIMoveMedium,
+    AIMoveHard,
 } from "../../gameComponents/Game";
 
 export default class AIBoardElem extends PubSubInterface {
@@ -12,6 +14,7 @@ export default class AIBoardElem extends PubSubInterface {
         super(viewModel, element);
         this.dragEnter = dragEnter;
         this.boardSize = null;
+        this.lastClicked = null;
     }
 
     render(model) {
@@ -39,12 +42,17 @@ export default class AIBoardElem extends PubSubInterface {
                 setTimeout(() => {
                     cell.addEventListener("click", (e) => {
                         const bound = this.handleClick.bind(this);
-                        bound(e, row, col, model);
+                        bound(e, row, col, model, cell);
                     });
-                }, 500);
+                }, 0);
 
-                if (tileRef.ship) {
-                    // display ship effect
+                if (this.lastClicked) {
+                    if (
+                        this.lastClicked.row === row &&
+                        this.lastClicked.col === col
+                    ) {
+                        cell.classList.add("pulse");
+                    }
                 }
 
                 switch (tileRef.tileStatus) {
@@ -94,32 +102,54 @@ export default class AIBoardElem extends PubSubInterface {
         return boardBorder;
     }
 
-    handleClick(e, row, col) {
+    handleClick(e, row, col, cell) {
+        this.lastClicked = { row: row, col: col };
         this.viewModel.updateModel((oldModel) => {
             const newModel = JSON.parse(JSON.stringify(oldModel));
-            console.log(newModel.AI.gameboard.board[row][col]);
+
             const AIgameboard = newModel.AI.gameboard;
 
             const attResponse = attack(row, col, AIgameboard);
 
+            newModel.lastClicked = { row: row, col: col };
+
             if (!attResponse) {
-                // handle tile already clicked
-                return;
+                newModel.stateMessage = "Already attacked there sir";
+                return newModel;
             }
 
-            if (attResponse) {
-                const clickedTile = AIgameboard.board[row][col];
-                if (clickedTile.ship) {
-                }
+            const clickedTile = AIgameboard.board[row][col];
+            if (checkAllShipsSunk(AIgameboard.ships)) {
+                newModel.gameState = "playerWins";
             }
 
-            // if (checkShipSunk(clickedTile.ship)) {
-            //     const allSunk = checkAllShipsSunk(AIgameboard.ships);
-            //     if (allSunk) {
-            //         console.log("All ships sunk, game over!");
-            //         return;
-            //     }
-            // }
+            setTimeout(() => {
+                this.viewModel.updateModel((oldModel1) => {
+                    const newModel = JSON.parse(JSON.stringify(oldModel1));
+
+                    const playerGameboard = newModel.player.gameboard;
+
+                    switch (newModel.AI.difficulty) {
+                        case "easy":
+                            AIMoveEasy(playerGameboard);
+                            break;
+                        case "medium":
+                            AIMoveMedium(playerGameboard);
+
+                            break;
+                        case "hard":
+                            AIMoveMedium(playerGameboard);
+                            break;
+                    }
+
+                    const clickedTile = playerGameboard.board[row][col];
+                    if (checkAllShipsSunk(playerGameboard.ships)) {
+                        newModel.gameState = "AIWins";
+                    }
+                    return newModel;
+                });
+            }, 0);
+
             return newModel;
         });
     }

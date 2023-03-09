@@ -58,16 +58,20 @@ export default class Radar extends PubSubInterface {
 
         const enemies = model.AI.gameboard.ships;
         enemies.forEach((ship, index) => {
-            radar.appendChild(
-                elem({ prop: "li", className: `enemyPing${index}` })
-            );
+            if (!ship.sunk) {
+                radar.appendChild(
+                    elem({ prop: "li", className: `enemyPing${index}` })
+                );
+            }
         });
 
         const friendly = model.player.gameboard.ships;
         friendly.forEach((ship, index) => {
-            radar.appendChild(
-                elem({ prop: "li", className: `friendlyPing${index}` })
-            );
+            if (!ship.sunk) {
+                radar.appendChild(
+                    elem({ prop: "li", className: `friendlyPing${index}` })
+                );
+            }
         });
 
         return radar;

@@ -684,9 +684,11 @@ button#activate.pushed {
 }
 
 .cell.hit {
+    border: 5px solid red;
 }
 
 .cell.miss {
+    border: 5px solid green;
 }
 
 .cell:hover {
@@ -707,6 +709,27 @@ button#activate.pushed {
 
 .AIBoardContainer .cell.miss {
     border: 5px solid red;
+}
+
+.cell.hit.pulse {
+    animation: pulse2 0.7s ease-out;
+}
+
+.cell.miss.pulse {
+    animation: pulse2 0.7s ease-out;
+}
+
+@keyframes pulse2 {
+    0% {
+        transform: scale(1);
+    }
+
+    90% {
+        transform: scale(2);
+    }
+
+    100% {
+    }
 }
 
 .cell[data-col="0"] {
@@ -1292,7 +1315,7 @@ button#activate.pushed {
     }
 }
 
-@media (max-width: 1550px) {
+@media (max-width: 1600px) {
     .flakBarrel1,
     .flakBarrel2,
     .flakBarrel3,
@@ -1310,6 +1333,16 @@ button#activate.pushed {
     .flakBarrel5,
     .flakBarrel6 {
         transform: translate(-20px, 0px) rotate(20deg);
+    }
+    .radarContainer {
+        position: fixed;
+        top: -20px;
+        left: -50px;
+        height: 300px;
+        width: 350px;
+        background-color: transparent;
+        transform: scale(0.7);
+        border: none;
     }
 }
 
@@ -1335,16 +1368,6 @@ button#activate.pushed {
 }
 
 @media (max-width: 1500px) {
-    .radarContainer {
-        position: fixed;
-        top: -20px;
-        left: -50px;
-        height: 300px;
-        width: 350px;
-        background-color: transparent;
-        transform: scale(0.7);
-        border: none;
-    }
     .waves {
         top: 50px;
         transform: scale(1.5);

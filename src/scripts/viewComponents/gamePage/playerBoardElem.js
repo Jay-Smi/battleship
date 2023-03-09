@@ -35,6 +35,15 @@ export default class playerBoardElem extends PubSubInterface {
                 cell.dataset.row = row;
                 cell.dataset.col = col;
 
+                if (model.lastClicked) {
+                    if (
+                        model.lastClicked.row === row &&
+                        model.lastClicked.col === col
+                    ) {
+                        cell.classList.add("pulse");
+                    }
+                }
+
                 // adds the dragenter and drop listener
                 cell.addEventListener("dragenter", (e) => {
                     const bound = this.handleDragEnter.bind(this);
@@ -54,10 +63,12 @@ export default class playerBoardElem extends PubSubInterface {
                 }
 
                 switch (tileRef.tileStatus) {
-                    case "H":
+                    case "hit":
+                        cell.classList.add("hit");
                         // display hit marker
                         break;
-                    case "M":
+                    case "miss":
+                        cell.classList.add("miss");
                         // display miss marker
                         break;
                     case null:
@@ -88,12 +99,12 @@ export default class playerBoardElem extends PubSubInterface {
                 tile.classList.add("onBoard");
             });
 
-            if (index === model.player.gameboard.ships.length - 1) {
-                shipElem.shipPulse.classList.add("shipOverlayPulse");
-                // setTimeout(() => {
-                //     shipElem.shipPulse.classList.remove("shipOverlayPulse");
-                // }, 2000);
+            if (model.gameState === "placeShips") {
+                if (index === model.player.gameboard.ships.length - 1) {
+                    shipElem.shipPulse.classList.add("shipOverlayPulse");
+                }
             }
+
             shadowGrid.appendChild(shipElem.element);
         });
 
