@@ -15,6 +15,7 @@ export default class Game {
         this.dropQueue = [];
         this.videoPlaying = true;
         this.lastClicked = null;
+        this.newGameState = null;
     }
 }
 
@@ -227,7 +228,6 @@ function AIMoveMedium(playerGameboard) {
         }
     }
 
-    // Add adjacent unattacked tiles to backtrack list
     adjacentUnattackedTiles.forEach((tile) => {
         unattackedBacktrackTiles.push(tile);
     });
@@ -235,11 +235,10 @@ function AIMoveMedium(playerGameboard) {
     let targetTile;
 
     if (unattackedBacktrackTiles.length > 0) {
-        console.log("debug", 6);
         targetTile = unattackedBacktrackTiles.pop();
     } else {
-        // Targeting a new random tile
-        console.log("debug", 1);
+        // target a new random tile
+
         const randomIndex = Math.floor(Math.random() * unattackedTiles.length);
         targetTile = unattackedTiles[randomIndex];
     }
@@ -268,26 +267,6 @@ function getAdjacentTiles(playerGameboard, tile) {
         adjacentTiles.push(playerGameboard.board[tile.row][tile.col + 1]); // Right
     }
     return adjacentTiles;
-}
-
-function getTilesBetween(playerGameboard, tile1, tile2) {
-    const tilesBetween = [];
-    if (tile1.row === tile2.row) {
-        // Horizontal
-        const startCol = Math.min(tile1.col, tile2.col);
-        const endCol = Math.max(tile1.col, tile2.col);
-        for (let col = startCol; col <= endCol; col++) {
-            tilesBetween.push(playerGameboard.board[tile1.row][col]);
-        }
-    } else if (tile1.col === tile2.col) {
-        // Vertical
-        const startRow = Math.min(tile1.row, tile2.row);
-        const endRow = Math.max(tile1.row, tile2.row);
-        for (let row = startRow; row <= endRow; row++) {
-            tilesBetween.push(playerGameboard.board[row][tile1.col]);
-        }
-    }
-    return tilesBetween;
 }
 
 // TODO: make hard AI actually work D:
@@ -321,7 +300,7 @@ function AIMoveHard(playerGameboard) {
         }
     }
 
-    // Add adjacent unattacked tiles to backtrack list
+    // add adjacent unattacked tiles to backtrack list
     adjacentUnattackedTiles.forEach((tile) => {
         unattackedBacktrackTiles.push(tile);
     });
@@ -330,7 +309,6 @@ function AIMoveHard(playerGameboard) {
     let hitShip = null;
 
     if (unattackedBacktrackTiles.length > 0) {
-        console.log("debug", 6);
         targetTile = unattackedBacktrackTiles.pop();
         const adjacentTiles = getAdjacentTiles(playerGameboard, targetTile);
         adjacentTiles.forEach((adjTile) => {
@@ -343,8 +321,8 @@ function AIMoveHard(playerGameboard) {
             }
         });
     } else {
-        // Targeting a new random tile
-        console.log("debug", 1);
+        // target a new random tile
+
         const randomIndex = Math.floor(Math.random() * unattackedTiles.length);
         targetTile = unattackedTiles[randomIndex];
     }
@@ -372,7 +350,7 @@ function AIMoveHard(playerGameboard) {
             });
         }
     }
-    console.log(attackResult);
+
     return attackResult;
 }
 
@@ -390,88 +368,3 @@ export {
     AIMoveMedium,
     AIMoveHard,
 };
-// function AIMoveMedium(playerGameboard) {
-//     const unattackedTiles = [];
-//     const attackedTiles = [];
-//     const unattackedBacktrackTiles = [];
-//     let hitShip = null;
-//     let hitDirection = null;
-
-//     // Collect all hit tiles and their adjacent unattacked tiles
-//     const hitTiles = [];
-//     const adjacentUnattackedTiles = new Set();
-//     for (let row = 0; row < playerGameboard.size; row++) {
-//         for (let col = 0; col < playerGameboard.size; col++) {
-//             const tile = playerGameboard.board[row][col];
-//             if (tile.tileStatus === "hit") {
-//                 hitTiles.push(tile);
-//                 const adjacentTiles = getAdjacentTiles(playerGameboard, tile);
-//                 adjacentTiles.forEach((adjTile) => {
-//                     if (
-//                         playerGameboard.board[adjTile.row][adjTile.col]
-//                             .tileStatus === null
-//                     ) {
-//                         adjacentUnattackedTiles.add(adjTile);
-//                     }
-//                 });
-//                 if (!hitShip) {
-//                     // if this is the first hit, check if it's part of a ship
-//                     const ship = playerGameboard.getShipAt(tile.row, tile.col);
-//                     if (ship) {
-//                         hitShip = ship;
-//                         // check the direction of the ship
-//                         if (ship.positions[0].row === ship.positions[1].row) {
-//                             hitDirection = "horizontal";
-//                         } else {
-//                             hitDirection = "vertical";
-//                         }
-//                     }
-//                 }
-//             } else if (tile.tileStatus === null) {
-//                 unattackedTiles.push(tile);
-//             } else if (tile.tileStatus === "miss") {
-//                 attackedTiles.push(tile);
-//             }
-//         }
-//     }
-
-//     // Add adjacent unattacked tiles to backtrack list
-//     adjacentUnattackedTiles.forEach((tile) => {
-//         unattackedBacktrackTiles.push(tile);
-//     });
-
-//     let targetTile;
-
-//     if (hitShip) {
-//         console.log("debug", 7);
-//         // if there's a hit ship, continue attacking in the same direction
-//         if (hitDirection === "horizontal") {
-//             const row = hitShip.positions[0].row;
-//             const startIndex = Math.min(...hitShip.positions.map((pos) => pos.col));
-//             const endIndex = Math.max(...hitShip.positions.map((pos) => pos.col));
-//             let col;
-//             if (hitShip.isSunk()) {
-//                 // if the ship is sunk, attack randomly
-//                 targetTile = unattackedTiles[Math.floor(Math.random() * unattackedTiles.length)];
-//             } else {
-//                 // attack the next tile in the same direction
-//                 if (attackedTiles.length > 0) {
-//                     // prioritize attacking tiles that are in the same row and haven't been attacked yet
-//                     const unattackedInRow = unattackedTiles.filter((tile) => tile.row === row);
-//                     const attackedInRow = attackedTiles.filter((tile) => tile.row === row);
-//                     const availableTiles = unattackedInRow.concat(attackedInRow);
-//                     for (let i = startIndex; i <= endIndex; i++) {
-//                         if (!availableTiles.some((tile) => tile.col === i)) {
-//                             col = i;
-//                             break;
-//                         }
-//                     }
-//                 }
-//                 if (!col) {
-//                     // if there are no adjacent unattacked tiles in the same row, backtrack
-//                     col = hitTiles[hitTiles.length - 1].col;
-//                 }
-//                 if (col < endIndex) {
-//                     targetTile = playerGameboard.board[row][col + 1];
-//                 } else {
-//                     targetTile =

@@ -157,7 +157,6 @@ export default class AIBoardElem extends PubSubInterface {
                                 AIMoveMedium(playerGameboard);
                             break;
                     }
-                    console.log(newModel.lastClicked.attResponse);
 
                     if (
                         newModel.lastClicked.attackResponse.tileStatus === "hit"
@@ -176,7 +175,6 @@ export default class AIBoardElem extends PubSubInterface {
                         }
                     }
 
-                    const clickedTile = playerGameboard.board[row][col];
                     if (checkAllShipsSunk(playerGameboard.ships)) {
                         newModel.gameState = "AIWins";
                     }

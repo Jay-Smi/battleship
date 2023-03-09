@@ -16,3 +16,5 @@ Game world map background credit: <a href="https://www.freepik.com/free-vector/v
 Radar credit: Online Tutorials YT https://www.youtube.com/watch?v=HTAQkuaHIqQ
 
 Alternate waves Graphic: <a href="https://www.freepik.com/free-vector/ocean-sea-waves-ripples-water-background_24496413.htm#query=graphics%20ocean%20waves&position=44&from_view=search&track=ais">Image by starline</a> on Freepik
+
+Clipboard credit - <a href='https://pngtree.com/so/clipboard'>clipboard png from pngtree.com/</a>

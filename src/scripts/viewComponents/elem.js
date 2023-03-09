@@ -1,4 +1,4 @@
-const elem = (content, version = 1) => {
+export default function elem(content, version = 1) {
     let el = document.createElement(content["prop"]);
     let text = content["textContent"];
     if (text) {
@@ -95,29 +95,18 @@ const elem = (content, version = 1) => {
         }
     }
     return el;
-};
+}
 
-// function elem(content) {
-//     const el = document.createElement(content["prop"]);
-
-//     for (let key in content) {
-//         if (content[key] === "prop") {
-//             continue;
-//         } else if (key === "classList") {
-//             for (let className of content[classList]) {
-//                 el.classList.add(content[classList][className]);
+// export default function elem(content) {
+//     const el = document.createElement(content.prop);
+//     Object.entries(content).forEach(([key, value]) => {
+//         if (key === "children") {
+//             if (value && value.length > 0) {
+//                 value.forEach((child) => el.appendChild(elem(child)));
 //             }
-//         } else if (key === "children") {
-//             console.log(content[key]);
-//             for (let child of content[key]) {
-//                 el.appendChild(elem(content[key][child]));
-//             }
-//         } else {
-//             el[key] = content[key];
+//         } else if (value) {
+//             el[key] = value;
 //         }
-//     }
-
+//     });
 //     return el;
 // }
-
-export default elem;

@@ -2,6 +2,7 @@ import elem from "../elem.js";
 import "../../../CSS/mappage.css";
 import redPinSrc from "../../../assets/images/red-pin.png";
 import stickyNoteSrc from "../../../assets/images/sticky-note.svg";
+import clipboardSrc from "../../../assets/images/clipboard.png";
 import PubSubInterface from "../../PubSubInterface.js";
 
 export default class MapPage extends PubSubInterface {
@@ -102,7 +103,7 @@ export default class MapPage extends PubSubInterface {
             children: [
                 elem({
                     prop: "img",
-                    src: stickyNoteSrc,
+                    src: clipboardSrc,
                     className: "stickyNote",
                 }),
                 elem({
@@ -115,7 +116,7 @@ export default class MapPage extends PubSubInterface {
                         }),
                         elem({
                             prop: "p",
-                            textContent: `Difficulty: ${selectedOptions.difficulty}`,
+                            innerHTML: `Difficulty: <u>${selectedOptions.difficulty}</u>`,
                         }),
                         elem({
                             prop: "p",
@@ -127,6 +128,7 @@ export default class MapPage extends PubSubInterface {
                         }),
                     ],
                 }),
+                elem({ prop: "div", className: "shadow" }),
             ],
         });
 

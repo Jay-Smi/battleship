@@ -25,6 +25,8 @@ export default class playerBoardElem extends PubSubInterface {
             className: "board",
             children: [shadowGrid],
         });
+        shadowGrid.draggable = false;
+        board.draggable = false;
         this.boardSize = model.player.gameboard.size;
         const cells = [];
         for (let row = 0; row < this.boardSize; row++) {
@@ -34,7 +36,7 @@ export default class playerBoardElem extends PubSubInterface {
                 // sets data values for coordinates
                 cell.dataset.row = row;
                 cell.dataset.col = col;
-
+                cell.draggable = false;
                 if (model.lastClicked) {
                     if (
                         model.lastClicked.row === row &&

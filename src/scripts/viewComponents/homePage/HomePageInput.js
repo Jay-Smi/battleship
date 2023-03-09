@@ -45,6 +45,7 @@ export default class HomePageInput extends PubSubInterface {
                 const newModel = { ...oldModel };
                 newModel.currentPage = "mapPage";
                 newModel.player.name = inputField.value;
+                newModel.newGameState = JSON.parse(JSON.stringify(newModel));
                 return newModel;
             });
         });

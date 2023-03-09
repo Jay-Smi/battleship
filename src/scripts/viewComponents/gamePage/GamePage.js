@@ -11,6 +11,7 @@ import Button from "./Button.js";
 import OptionsMenu from "./OptionsMenu.js";
 import ScoreContainer from "./ScoreContainer.js";
 import AIBoardElem from "./AIBoardElem.js";
+import wood from "../../../assets/images/wood.jpg";
 
 export default class GamePage extends PubSubInterface {
     constructor(viewModel, element) {
@@ -21,7 +22,9 @@ export default class GamePage extends PubSubInterface {
         return (
             (oldModel.gameState !== newModel.gameState &&
                 newModel.currentPage === "gamePage") ||
-            oldModel.videoPlaying !== newModel.videoPlaying
+            oldModel.videoPlaying !== newModel.videoPlaying ||
+            newModel.gameState === "playerWins" ||
+            newModel.gameState === "AIWins"
         );
     }
 
@@ -31,6 +34,12 @@ export default class GamePage extends PubSubInterface {
                 return this.buildPlaceShipsStage(model);
                 break;
             case "inGame":
+                return this.buildInGameStage(model);
+                break;
+            case "playerWins":
+                return this.buildInGameStage(model);
+                break;
+            case "AIWins":
                 return this.buildInGameStage(model);
                 break;
         }
@@ -292,6 +301,82 @@ export default class GamePage extends PubSubInterface {
                 }),
             ],
         });
+
+        if (model.gameState === "playerWins" || model.gameState === "AIWins") {
+            const newGameBtn = elem({
+                prop: "div",
+                textContent: "New Game",
+                className: "newGameButton",
+            });
+
+            newGameBtn.addEventListener("click", () => {
+                this.viewModel.updateModel((oldModel) => {
+                    return oldModel.newGameState;
+                });
+            });
+            const newGameBorder = elem({
+                prop: "div",
+                className: "newGameBorder",
+                children: [newGameBtn],
+            });
+
+            const winText =
+                model.gameState === "playerWins" ? "VICTORY" : "DEFEAT";
+            const winState = elem({
+                prop: "div",
+                className: "winState",
+                textContent: winText,
+            });
+
+            const title = elem({
+                prop: "h1",
+                className: "title",
+                textContent: "BATTLESHIP",
+            });
+            const titleBorder = elem({
+                prop: "div",
+                className: "titleBorder",
+                children: [title],
+            });
+
+            const topDiv = elem({
+                prop: "div",
+                className: "topDiv",
+                children: [titleBorder],
+            });
+            const midDiv = elem({
+                prop: "div",
+                className: "midDiv",
+                children: [winState],
+            });
+            const botDiv = elem({
+                prop: "div",
+                className: "botDiv",
+                children: [newGameBorder],
+            });
+
+            const frameContainer = elem({
+                prop: "div",
+                className: "frameContainer",
+                children: [topDiv, midDiv, botDiv],
+            });
+
+            const mask = elem({ prop: "img", className: "mask", src: wood });
+
+            const gameOverContainer = elem({
+                prop: "div",
+                className: "gameOverContainer",
+                children: [frameContainer, mask],
+            });
+
+            const modalContainer = elem({
+                prop: "div",
+                className: "modelContainer",
+                children: [gameOverContainer],
+            });
+
+            gameContainer.appendChild(modalContainer);
+        }
         return gameContainer;
     }
 }

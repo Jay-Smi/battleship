@@ -52,12 +52,7 @@ export default class HomePage extends PubSubInterface {
                 prop: "footer",
                 className: "footer",
                 children: [
-                    elem({ prop: "span", textContent: "Created by Gluttz, " }),
-                    elem({
-                        prop: "a",
-                        textContent: "Image by upklyak on Freepik",
-                        href: "https://www.freepik.com/free-vector/sunken-cruise-ship-sea-harbor-morning_21584915.htm#query=battleship%20background&position=32&from_view=search&track=ais",
-                    }),
+                    elem({ prop: "span", textContent: "Created by Gluttz" }),
                 ],
             })
         );

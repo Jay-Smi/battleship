@@ -1304,11 +1304,11 @@ button#activate.pushed {
     filter: var(--filter);
 }
 
-.shipCol:nth-child(1) {
+#container .shipCol:nth-child(1) {
     border-left: none;
 }
 
-.shipCol:nth-child(5) {
+#container .shipCol:nth-child(5) {
     border-right: none;
 }
 
@@ -1336,30 +1336,217 @@ button#activate.pushed {
     justify-content: space-evenly;
 }
 
-/* .optionsContainer {
-    background-color: black;
-    position: absolute;
+.modelContainer {
+    position: fixed;
     top: 0;
+    left: 0;
     right: 0;
-    border-bottom: 10px solid rgb(114, 114, 114);
-    border-right: 10px solid rgb(87, 87, 87);
-    border-top: 10px solid rgb(119, 119, 119);
-    border-left: 10px solid rgb(155, 155, 155);
-    border-bottom-left-radius: 10px;
-    box-shadow: 0 0 15px black;
-}
-.optionsHousing {
-    border-bottom: 10px solid lightgrey;
-    border-right: 10px solid rgb(187, 187, 187);
-    border-top: 10px solid rgb(87, 87, 87);
-    border-left: 10px solid rgb(107, 107, 107);
-    padding: 0.5rem 2rem;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.644);
+
     display: flex;
-    align-items: center;
     justify-content: center;
-    gap: 2rem;
-    box-shadow: inset 0 0 20px var(--lowAlpha-color);
-} */
+    align-items: center;
+    z-index: 2;
+}
+
+.gameOverContainer {
+    width: 70%;
+    height: 60%;
+
+    background: radial-gradient(
+                circle 100px at top left,
+                #0000 98%,
+                rgb(88, 88, 88)
+            )
+            top left,
+        radial-gradient(circle 100px at top right, #0000 98%, rgb(88, 88, 88))
+            top right,
+        radial-gradient(circle 100px at bottom left, #0000 98%, rgb(88, 88, 88))
+            bottom left,
+        radial-gradient(
+                circle 100px at bottom right,
+                #0000 98%,
+                rgb(88, 88, 88)
+            )
+            bottom right;
+    background-size: 51% 51%;
+
+    background-repeat: no-repeat;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.frameContainer {
+    width: 92%;
+    height: 85%;
+    background-color: grey;
+    background: radial-gradient(
+                circle 100px at top left,
+                #0000 98%,
+                rgb(143, 143, 143)
+            )
+            top left,
+        radial-gradient(
+                circle 100px at top right,
+                #0000 98%,
+                rgb(143, 143, 143)
+            )
+            top right,
+        radial-gradient(
+                circle 100px at bottom left,
+                #0000 98%,
+                rgb(143, 143, 143)
+            )
+            bottom left,
+        radial-gradient(
+                circle 100px at bottom right,
+                #0000 98%,
+                rgb(143, 143, 143)
+            )
+            bottom right;
+    background-size: 51% 51%;
+    background-repeat: no-repeat;
+    display: flex;
+
+    align-items: center;
+    flex-direction: column;
+}
+.mask {
+    width: 63%;
+    height: 48%;
+    -webkit-mask: radial-gradient(circle 100px at top left, #0000 98%, #000) top
+            left,
+        radial-gradient(circle 100px at top right, #0000 98%, #000) top right,
+        radial-gradient(circle 100px at bottom left, #0000 98%, #000) bottom
+            left,
+        radial-gradient(circle 100px at bottom right, #0000 98%, #000) bottom
+            right;
+    -webkit-mask-size: 51% 51%;
+    -webkit-mask-repeat: no-repeat;
+    position: absolute;
+}
+
+.topDiv,
+.midDiv,
+.botDiv {
+    z-index: 1;
+}
+
+.titleBorder {
+    border: 5px solid rgb(80, 80, 80);
+    background-color: rgb(131, 131, 131);
+    border-radius: 50px;
+    padding: 0 2rem;
+    position: relative;
+    margin-top: 3rem;
+}
+.titleBorder::before {
+    content: "";
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background-color: #474747;
+    position: absolute;
+    top: 45%;
+    left: 15px;
+    box-shadow: inset 1px 1px 3px black;
+}
+
+.titleBorder::after {
+    content: "";
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background-color: #474747;
+    position: absolute;
+    top: 45%;
+    right: 15px;
+    box-shadow: inset 1px 1px 3px black;
+}
+
+.title {
+    font-family: BlackOps1;
+    color: rgb(46, 46, 46);
+    font-size: 5rem;
+    text-align: center;
+    text-shadow: 1px 1px 1px #818181, 1px 2px 1px #818181, 1px 3px 1px #818181,
+        1px 4px 1px #818181, 3px 6px 10px black;
+    letter-spacing: 10px;
+}
+
+.winState {
+    font-family: BlackOps1;
+    color: rgb(99, 99, 99);
+    font-size: 8rem;
+    text-align: center;
+    text-shadow: 1px 1px 1px #a8a8a8, 1px 2px 1px #a8a8a8, 1px 3px 1px #a8a8a8,
+        1px 4px 1px #a8a8a8, 5px 10px 20px black;
+    letter-spacing: 10px;
+    margin-top: 1rem;
+}
+
+.newGameBorder {
+    border: 5px solid rgb(80, 80, 80);
+    background-color: rgb(153, 153, 153);
+    border-radius: 50px;
+    padding: 0 2rem;
+    position: relative;
+    cursor: pointer;
+    box-shadow: 3px 3px 10px black;
+    animation: alert 2s linear infinite;
+}
+
+.newGameBorder:hover {
+    box-shadow: 3px 3px 20px black;
+}
+
+.newGameBorder::before {
+    content: "";
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background-color: #474747;
+    position: absolute;
+    top: 45%;
+    right: 15px;
+    box-shadow: inset 1px 1px 3px black;
+}
+
+.newGameBorder::after {
+    content: "";
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background-color: #474747;
+    position: absolute;
+    top: 45%;
+    left: 15px;
+    box-shadow: inset 1px 1px 3px black;
+}
+
+.newGameButton {
+    font-family: BlackOps1;
+    color: rgb(61, 61, 61);
+    font-size: 3rem;
+    text-align: center;
+    text-shadow: 1px 1px 1px #a8a8a8, 1px 2px 1px #a8a8a8, 1px 3px 1px #a8a8a8,
+        1px 4px 1px #a8a8a8, 5px 10px 20px black;
+    letter-spacing: 10px;
+}
+
+@keyframes alert {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.1);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
 
 @media (min-width: 1800px) {
     .flakBarrel1,
